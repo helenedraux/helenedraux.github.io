@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>"Reveal Code" button on Jupyter | Data science w/ a geo bias
+</title>
+  <link rel="canonical" href="http://helenedraux.github.io/posts/reveal-code-on-jupyter-notebook.html">
+
+  <link rel="alternate" type="application/atom+xml" href="http://helenedraux.github.io/feeds/all.atom.xml" title="Full Atom Feed">
+  <link rel="alternate" type="application/atom+xml" href="http://helenedraux.github.io/feeds/website-hack.atom.xml" title="Categories Atom Feed">
+
+  <link rel="apple-touch-icon" href="http://helenedraux.github.io/apple-touch-icon.png" sizes="180x180">
+  <link rel="icon" type="image/png" href="http://helenedraux.github.io/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="http://helenedraux.github.io/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="http://helenedraux.github.io/manifest.json">
+  <meta name="theme-color" content="#333333">
+
+  <link rel="stylesheet" href="http://helenedraux.github.io/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://helenedraux.github.io/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="http://helenedraux.github.io/theme/css/pygments/lovelace.min.css">
+  <link rel="stylesheet" href="http://helenedraux.github.io/theme/css/style.css">
+
+  <link href="https://fonts.googleapis.com/css?family=Sansita+One" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+
+
+<meta name="description" content="I wrote a short script to add a button which hides and show the code cells">
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="   crossorigin="anonymous"></script>
+<script src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.3.min.js"></script>
+<script src="http://helenedraux.github.io/theme/js/custom.js"></script>
+<script>
+  (function(i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function() {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o);
+    a.async = 1;
+    a.src = g;
+    m = s.getElementsByTagName(o)[0];
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-90338324-1', 'auto');
+  ga('send', 'pageview');
+</script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-2">
+          <a href="http://helenedraux.github.io">
+            <img class="img-fluid" src=http://helenedraux.github.io/images/compass2.png width=100 height=100 alt="Data science w/ a geo bias">
+          </a>
+        </div>
+        <div class="col-sm-10">
+          <h1 class="title"><a href="http://helenedraux.github.io">Data science w/ a geo bias</a></h1>
+          <div id="header_subtitle">
+            <h4 class="text-muted">Hélène Draux</h4>
+          </div>
+          <div id="header_links">
+            <ul class="list-inline">
+              <li class="list-inline-item"><a href="http://helenedraux.github.io/pages/about.html">About</a> \ </li>
+              <li class="list-inline-item"><a href="http://helenedraux.github.io/pages/contact.html">Contact</a> \ </li>
+
+              <li class="list-inline-item"><a href="http://www.helenedraux.net/" target="_blank">www</a></li>
+
+              <li class=" list-inline-item text-muted"> | </li>
+              <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/nairobilug/pelican-alchemy" target="_blank"></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+    <div class="article_title">
+      <h1>"Reveal Code" button on Jupyter
+</h1></div>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2017-01-17T06:30:00+02:00">
+        <i class="fa fa-clock-o"></i>
+        17 January 2017
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="http://helenedraux.github.io/category/website-hack.html">Website Hack</a>
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-files-o"></i>
+        <a href="http://helenedraux.github.io/tag/pelican.html">#pelican</a>,         <a href="http://helenedraux.github.io/tag/jupyter.html">#jupyter</a>,         <a href="http://helenedraux.github.io/tag/javascript.html">#javascript</a>      </li>
+    </ul>
+  </header>
+  <hr>
+  <div class="content">
+    <p>Jupyter notebook still doesn't have the capability of hiding cells when you publish your notebooks online. I think there is a plugin that can do it, but didn't want to install yet another plugin that I wouldn't be able to maintain easily. Besides I'm comfortable enough with javascript to write my own code.</p>
+<h1>Process</h1>
+<p>To create a script that would hide and show the elements of code, I first published a notebook on my server and looked at how the notebook was rendered. For instance, below are two cells: the first is a markdown, the second is a code cell. In pure Javascript, to hide/show an element, the usual path is to change the display style of the element: taking the value either <code>none</code> or <code>block</code>.</p>
+<div class="highlight"><pre><span></span><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"cell border-box-sizing text_cell rendered"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"prompt input_prompt"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"inner_cell"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"text_cell_render border-box-sizing rendered_html"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;p&gt;</span>This is a text cell<span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"cell border-box-sizing code_cell rendered"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"input"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"prompt input_prompt"</span><span class="nt">&gt;</span>In [1]:<span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"inner_cell"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"input_area"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">" highlight hl-ipython2"</span><span class="nt">&gt;</span>
+            This is a code cell
+        <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+<p>I noticed that there was only one class different between both div: <code>text_cell</code> or <code>code_cell</code>. Well named I guess! My idea was then to write a javascript function which adds a <code>button</code> before <code>code_cell</code> and hides/shows the <code>code_cell</code>. Once I've added a button, the HTML code would become like this:</p>
+<div class="highlight"><pre><span></span><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"cell border-box-sizing text_cell rendered"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"prompt input_prompt"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"inner_cell"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"text_cell_render border-box-sizing rendered_html"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;p&gt;</span>This is a text cell<span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+
+<span class="nt">&lt;button&gt;</span>Hide/Show<span class="nt">&lt;/button&gt;</span>
+
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"cell border-box-sizing code_cell rendered"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"input"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"prompt input_prompt"</span><span class="nt">&gt;</span>In [1]:<span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"inner_cell"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"input_area"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">" highlight hl-ipython2"</span><span class="nt">&gt;</span>
+            This is a code cell
+        <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+<p>The code that I want to add is therefore the <code>nextElementSibling</code>. However, if the <code>style: display</code> of the code_cell is changed, it will not render well when showing again. Therefore I decided to modify the display style of the children of <code>code_cell</code> instead. </p>
+<h1>Code</h1>
+<h2>Custom.js</h2>
+<p>I started by creating a <code>custom.js</code> file in the folder <code>theme/(nameofmytheme)/static/js</code> since there wasn't any before. </p>
+<p>In the file, I wrote the code below. Note that I use bootstrap, and therefore I use their button style.</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">code_shown</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">"DOMContentLoaded"</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
+  <span class="kd">var</span> <span class="nx">cellstohide_wrapper</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByClassName</span><span class="p">(</span><span class="s1">'cell border-box-sizing code_cell rendered'</span><span class="p">);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">cellstohide_wrapper</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">nbcell_wrapper</span><span class="o">=</span> <span class="nx">cellstohide_wrapper</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="nx">nbcell_wrapper</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+      <span class="nx">cellstohide_wrapper</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">insertAdjacentHTML</span><span class="p">(</span><span class="s1">'beforebegin'</span><span class="p">,</span> <span class="s1">'&lt;button class="btn btn-danger btn-sm" id="toggleCodeBtn_'</span><span class="o">+</span> <span class="nx">i</span> <span class="o">+</span><span class="s1">'" value="Show Code" onclick="code_toggle(event)"&gt;Reveal code&lt;/button&gt;'</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">k</span> <span class="o">&lt;</span> <span class="nx">cellstohide_wrapper</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">childNodes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">elementToReturn</span> <span class="o">=</span> <span class="nx">cellstohide_wrapper</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">childNodes</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">elementToReturn</span><span class="p">.</span><span class="nx">className</span> <span class="o">==</span> <span class="s1">'input'</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">elementToReturn</span><span class="p">.</span><span class="nx">childNodes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                      <span class="nx">childtohide</span> <span class="o">=</span> <span class="nx">elementToReturn</span><span class="p">.</span><span class="nx">childNodes</span><span class="p">[</span><span class="nx">j</span><span class="p">];</span>
+                      <span class="k">if</span> <span class="p">(</span><span class="nx">childtohide</span><span class="p">.</span><span class="nx">className</span> <span class="o">==</span> <span class="s1">'prompt input_prompt'</span> <span class="o">||</span> 
+                                  <span class="nx">childtohide</span><span class="p">.</span><span class="nx">className</span> <span class="o">==</span> <span class="s1">'inner_cell'</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="nx">childtohide</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">display</span> <span class="o">=</span> <span class="s1">'none'</span><span class="p">;</span>
+                      <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+
+            <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+<span class="nx">code_toggle</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">baseElement</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">nextElementSibling</span><span class="p">;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">baseElement</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">code_shown</span><span class="p">){</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">baseElement</span><span class="p">.</span><span class="nx">childNodes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">elementToReturn</span> <span class="o">=</span> <span class="nx">baseElement</span><span class="p">.</span><span class="nx">childNodes</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">elementToReturn</span><span class="p">.</span><span class="nx">className</span> <span class="o">==</span> <span class="s1">'input'</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">elementToReturn</span><span class="p">.</span><span class="nx">childNodes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                      <span class="nx">childtohide</span> <span class="o">=</span> <span class="nx">elementToReturn</span><span class="p">.</span><span class="nx">childNodes</span><span class="p">[</span><span class="nx">j</span><span class="p">];</span>
+                      <span class="k">if</span> <span class="p">(</span><span class="nx">childtohide</span><span class="p">.</span><span class="nx">className</span> <span class="o">==</span> <span class="s1">'prompt input_prompt'</span> <span class="o">||</span> 
+                                  <span class="nx">childtohide</span><span class="p">.</span><span class="nx">className</span> <span class="o">==</span> <span class="s1">'inner_cell'</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="nx">childtohide</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">display</span> <span class="o">=</span> <span class="s1">'none'</span><span class="p">;</span>
+                      <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">id</span><span class="p">).</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="s1">'Reveal code'</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">baseElement</span><span class="p">.</span><span class="nx">childNodes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">elementToReturn</span> <span class="o">=</span> <span class="nx">baseElement</span><span class="p">.</span><span class="nx">childNodes</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">elementToReturn</span><span class="p">.</span><span class="nx">className</span> <span class="o">==</span> <span class="s1">'input'</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">elementToReturn</span><span class="p">.</span><span class="nx">childNodes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                      <span class="nx">childtohide</span> <span class="o">=</span> <span class="nx">elementToReturn</span><span class="p">.</span><span class="nx">childNodes</span><span class="p">[</span><span class="nx">j</span><span class="p">];</span>
+                      <span class="k">if</span> <span class="p">(</span><span class="nx">childtohide</span><span class="p">.</span><span class="nx">className</span> <span class="o">==</span> <span class="s1">'prompt input_prompt'</span> <span class="o">||</span> 
+                                  <span class="nx">childtohide</span><span class="p">.</span><span class="nx">className</span> <span class="o">==</span> <span class="s1">'inner_cell'</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="nx">childtohide</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">display</span> <span class="o">=</span> <span class="s1">'block'</span><span class="p">;</span>
+                      <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">id</span><span class="p">).</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="s1">'Hide code'</span><span class="p">;</span>
+      <span class="p">}</span>
+        <span class="nx">code_shown</span> <span class="o">=</span> <span class="o">!</span><span class="nx">code_shown</span><span class="p">;</span>
+ <span class="p">}</span>
+</pre></div>
+<h2>article.html</h2>
+<p>Then I needed to tell my theme to load <code>custom.js</code>. I went to <code>theme/(nameofmytheme)/templates/articles.html</code> to add before the content:</p>
+<div class="highlight"><pre><span></span><span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">"</span><span class="cp">{{</span> <span class="nv">SITEURL</span> <span class="cp">}}</span><span class="s">/theme/js/custom.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre></div>
+<h2>Et voilà!</h2>
+  </div>
+</article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <p class="col-sm-6 text-sm-right text-muted" id="themeauthor">
+          Inspired by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>
