@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://helenedraux.github.io/posts/reveal-code-on-jupyter-notebook.html</loc>
+    <loc>https://helenedraux.github.io/posts/NLP analysis.html</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://helenedraux.github.io/posts/Facebook analysis.html</loc>
+    <loc>https://helenedraux.github.io/posts/tips-using-jupyter-to-publish-on-a-blog.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://helenedraux.github.io/posts/reveal-code-on-jupyter-notebook.html</loc>
     <priority>0.8</priority>
   </url>
   <url>
