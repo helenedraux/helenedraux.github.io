@@ -1040,10 +1040,10 @@ h6:hover .anchor-link {
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
-&lt;div id="e5d073bc-3c4d-40b7-95a8-9bfb9fcdef33"&gt;&lt;/div&gt;
+&lt;div id="fdc5ea5e-cb51-439e-80fb-ca36b42426ce"&gt;&lt;/div&gt;
 &lt;div class="output_subarea output_javascript "&gt;
 &lt;script type="text/javascript"&gt;
-var element = $('#e5d073bc-3c4d-40b7-95a8-9bfb9fcdef33');
+var element = $('#fdc5ea5e-cb51-439e-80fb-ca36b42426ce');
 
 (function(global) {
   function now() {
@@ -3168,4 +3168,44 @@ When considering the same generation male vs female, we should remember that &lt
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="na"&gt;src=&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;SITEURL&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="s"&gt;/theme/js/custom.js"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h2&gt;Et voilà!&lt;/h2&gt;
-&lt;p&gt;With a bit of javascript and CSS, it is very easy to hack this! Besides, it means you don't need to take care of a plugin 'block box' that you don't understand; now you know why and how this works.&lt;/p&gt;</content><category term="pelican"></category><category term="jupyter"></category><category term="javascript"></category></entry></feed>
+&lt;p&gt;With a bit of javascript and CSS, it is very easy to hack this! Besides, it means you don't need to take care of a plugin 'block box' that you don't understand; now you know why and how this works.&lt;/p&gt;</content><category term="pelican"></category><category term="jupyter"></category><category term="javascript"></category></entry><entry><title>import from the __future__</title><link href="https://helenedraux.github.io/posts/import-from-the-__future__.html" rel="alternate"></link><published>2016-09-01T20:42:00+03:00</published><updated>2016-09-01T20:42:00+03:00</updated><author><name>Hélène</name></author><id>tag:helenedraux.github.io,2016-09-01:/posts/import-from-the-__future__.html</id><summary type="html">&lt;p&gt;In python 2.7, 1/2 = 0. Here is how to avoid it.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Python 2.7 still struggles with divisions of integers, which means that 1/2 returns 0 instead of 0.5. To avoid that, just use:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;__future__&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;division&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</content><category term="python"></category></entry><entry><title>Tkinter in Mac</title><link href="https://helenedraux.github.io/posts/tkinter-in-mac.html" rel="alternate"></link><published>2016-09-01T20:42:00+03:00</published><updated>2016-09-01T20:42:00+03:00</updated><author><name>Hélène</name></author><id>tag:helenedraux.github.io,2016-09-01:/posts/tkinter-in-mac.html</id><summary type="html">&lt;p&gt;Issue with matplotlib library&lt;/p&gt;</summary><content type="html">&lt;p&gt;I ran into issues with some python files from Udacity course in Machine Learning. The file uses the Tk library, which gives an error 'TclError'. I followed some &lt;a href="http://stackoverflow.com/questions/34405087/why-is-pyplot-giving-me-a-tclerror-on-osx"&gt;online advice&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote class="blockquote"&gt;
+&lt;p&gt;I found that I have installed the tk both in anacode and system. But I donot know the reason in callback in Tk. So what I did is change the backend of matplotlib.&lt;/p&gt;
+&lt;p&gt;cd ~/.matplotlib&lt;/p&gt;
+&lt;p&gt;vi matplotlibrc&lt;/p&gt;
+&lt;p&gt;then change&lt;/p&gt;
+&lt;p&gt;backend : TkAgg
+to&lt;/p&gt;
+&lt;p&gt;backend : Qt4Agg
+And it worked for me !&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Worked for me too!&lt;/p&gt;</content><category term="python"></category><category term="matplotlib"></category><category term="udacity"></category></entry><entry><title>Saving/Exporting CartoDB map as jpeg.</title><link href="https://helenedraux.github.io/posts/saving-exporting-cartodb-map-as-jpeg.html" rel="alternate"></link><published>2016-06-01T20:42:17+03:00</published><updated>2016-06-01T20:42:17+03:00</updated><author><name>Hélène</name></author><id>tag:helenedraux.github.io,2016-06-01:/posts/saving-exporting-cartodb-map-as-jpeg.html</id><summary type="html">&lt;p&gt;Add an export button to your Leaflet map&lt;/p&gt;</summary><content type="html">&lt;p&gt;I've recently needed to make a &lt;strong&gt;save/export static map&lt;/strong&gt; from data stored in Cartodb and shown on a leaflet map. There are a couple of plugins for leaflet, but none was satisfying; either printing only around my map, or only the map. I also did not want to use the 'print' to pdf function of the browser, I wanted to save as an image. I found a few articles online, and &lt;a href="https://groups.google.com/forum/#!topic/cartodb/VxysRLNUs6s"&gt;this one&lt;/a&gt; mentioned html2canvas but without sharing any parameters.. and when I tried using it out of the box, I could not print the legend (which is the same as Cartodb embeded 'Save Map' function).
+I eventually used this configuration:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;printmap&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+  &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;screenshot&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{};&lt;/span&gt;
+  &lt;span class="c1"&gt;//Hide the toolbars (zoom and search bars)&lt;/span&gt;
+  &lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'.leaflet-top.leaflet-left'&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;addClass&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hide'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'.leaflet-top.leaflet-right'&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;addClass&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hide'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="c1"&gt;//Make sure that the legend panel is opened&lt;/span&gt;
+  &lt;span class="nx"&gt;sidebar&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'home'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="c1"&gt;//Grab the map&lt;/span&gt;
+  &lt;span class="nx"&gt;canvasdiv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getElementsByTagName&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"body"&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+  &lt;span class="c1"&gt;//html2canvas function. These options seemed to work for me.&lt;/span&gt;
+  &lt;span class="nx"&gt;html2canvas&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;canvasdiv&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+     &lt;span class="nx"&gt;letterRendering&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+     &lt;span class="nx"&gt;taintTest&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+     &lt;span class="nx"&gt;useCORS&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+     &lt;span class="nx"&gt;onrendered&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;canvas&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="c1"&gt;//inspired from http://stackoverflow.com/questions/31656689/how-to-save-img-to-users-local-computer-using-html2canvas/31657234#31657234&lt;/span&gt;
+        &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;createElement&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'a'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="c1"&gt;// toDataURL defaults to png, so we need to request a jpeg, then convert for file download.&lt;/span&gt;
+        &lt;span class="nx"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;href&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;canvas&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;toDataURL&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"image/png"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"image/jpeg"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;"image/octet-stream"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="nx"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;download&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'havfriluftsliv_kort.jpg'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="nx"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;click&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+  &lt;span class="p"&gt;});&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I call this function with an &lt;a href="https://github.com/CliffCloud/Leaflet.EasyButton"&gt;easy button&lt;/a&gt; from the Leaflet map.&lt;/p&gt;</content><category term="cartodb"></category><category term="leaflet"></category><category term="javascript"></category></entry></feed>
