@@ -31,8 +31,8 @@
 
 
 <meta name="description" content="A short list of things I learned while making this blog: improving the display of notebook with some CSS hack, a markdown trick and some bokeh suggestions.">
-<script src="https://code.jquery.com/jquery-1.12.4.min.js"   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="   crossorigin="anonymous"></script>
-<script src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.3.min.js"></script>
+<script src="https://helenedraux.github.io/theme/js/jquery-1.12.4.min.js"></script>
+<script src="https://helenedraux.github.io/theme/js/bokeh-0.12.3.min.js"></script>
 <script src="https://helenedraux.github.io/theme/js/custom.js"></script>
 <script>
   (function(i, s, o, g, r, a, m) {
@@ -105,7 +105,13 @@
   </header>
   <hr>
   <div class="content">
-    <p>Jupyter Notebook are very easy to integrate in pelican. I modified it a bit so it's easier to read. I already blogged about the button 'Reveal Code', which creates a button for each code cell, and hides all the code cells. Here is a list of the other small modifications I made.</p>
+    <div class="row">
+      <!-- https://afeld.github.io/bootstrap-toc/:sidebar, which will move to the top on a small screen -->
+      <!--div class="col-sm-3">
+        <nav id="toc" data-spy="affix" data-toggle="toc"></nav>
+      </div>
+      <div class="col-sm-9"-->
+        <p>Jupyter Notebook are very easy to integrate in pelican. I modified it a bit so it's easier to read. I already blogged about the button 'Reveal Code', which creates a button for each code cell, and hides all the code cells. Here is a list of the other small modifications I made.</p>
 <h2>Hide the empty input cells</h2>
 <p>Jupyter Notebooks are made of two columns: one for the input number (In [X]) and the code/text column. When seeing the Notebook on a blog, it's not so relevant. On my configuration, it was still showing, so I added: </p>
 <div class="highlight"><pre><span></span><span class="nt">div</span><span class="nc">.input_prompt</span><span class="p">{</span>
@@ -149,6 +155,7 @@
 <p>It's also possible to hide the logo, but although I find it a bit childish with all these colors, I think it's good to show where the graphs come from. Besides, it also indicates when the library has been loaded, which is user friendly for people with slow connections.</p>
 <h2>Et voilà!</h2>
 <p>It's easy to make your Jupyter Notebook easy to navigate, so go on and do some storytelling with data!</p>
+      <!--/div-->    
   </div>
 </article>
 <hr>
@@ -179,7 +186,9 @@
                       <div class="col-sm-4 card-wrapper">
                           <div class="card related-art">
                             <a href="https://helenedraux.github.io/posts/reveal-code-on-jupyter-notebook.html">
+                            <div class="image relatedimage">
                               <img class="card-img-top img-responsive img-feat-rel" src="/images/revealcode.png">
+                            </div>
                             </a>
                             <div class="card-block">
                                 <h4 class="card-title"><a href="https://helenedraux.github.io/posts/reveal-code-on-jupyter-notebook.html">"Reveal Code" button on Jupyter</a></h4>
@@ -203,7 +212,9 @@
                       <div class="col-sm-4 card-wrapper">
                           <div class="card related-art">
                             <a href="https://helenedraux.github.io/posts/NLP analysis.html">
+                            <div class="image relatedimage">
                               <img class="card-img-top img-responsive img-feat-rel" src="/images/facebook.png">
+                            </div>
                             </a>
                             <div class="card-block">
                                 <h4 class="card-title"><a href="https://helenedraux.github.io/posts/NLP analysis.html">NLP of a Facebook Page</a></h4>
@@ -230,7 +241,9 @@
                       <div class="col-sm-4 card-wrapper">
                           <div class="card related-art">
                             <a href="https://helenedraux.github.io/posts/import-from-the-__future__.html">
+                            <div class="image relatedimage">
                               <img class="card-img-top img-responsive img-feat-rel" src="/images/fromfutureimportdivision.png">
+                            </div>
                             </a>
                             <div class="card-block">
                                 <h4 class="card-title"><a href="https://helenedraux.github.io/posts/import-from-the-__future__.html">import from the __future__</a></h4>
@@ -252,7 +265,9 @@
                       <div class="col-sm-4 card-wrapper">
                           <div class="card related-art">
                             <a href="https://helenedraux.github.io/posts/tkinter-in-mac.html">
+                            <div class="image relatedimage">
                               <img class="card-img-top img-responsive img-feat-rel" src="/images/TclError.png">
+                            </div>
                             </a>
                             <div class="card-block">
                                 <h4 class="card-title"><a href="https://helenedraux.github.io/posts/tkinter-in-mac.html">Tkinter in Mac</a></h4>

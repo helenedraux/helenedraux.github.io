@@ -7,9 +7,9 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>misc Articles | Data science w/ a geo bias
+  <title>Tropical Neglected Disease | Data science w/ a geo bias
 </title>
-  <link rel="canonical" href="http://localhost:8000/category/misc.html">
+  <link rel="canonical" href="http://localhost:8000/drafts/tropical-neglected-disease.html">
 
 
   <link rel="apple-touch-icon" href="http://localhost:8000/apple-touch-icon.png" sizes="180x180">
@@ -28,7 +28,10 @@
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
 
 
-<meta name="description" content="Portfolio with data science projects and visualisation">
+<meta name="description" content="">
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="   crossorigin="anonymous"></script>
+<script src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.3.min.js"></script>
+<script src="http://localhost:8000/theme/js/custom.js"></script>
 <script>
   (function(i, s, o, g, r, a, m) {
     i['GoogleAnalyticsObject'] = r;
@@ -80,73 +83,71 @@
   <div class="main">
     <div class="container">
     <div class="article_title">
-      <h1>misc Articles
+      <h1>Tropical Neglected Disease
 </h1></div>
-<div class="headertitle">
-<p  class="lead"><strong>Welcome</strong> to my geo tech blog, where you can read about some of my projects.</p>
-  <div class="alltags">
-  <ul class="tagcloud list-inline">
-        <li class="list-inline-item" style="font-size: 100.0%;">
-              <a href="http://localhost:8000" class="taglink">All</a>
-          </li>          <li class="list-inline-item" style="font-size: 100.0%;">
-              <a href="http://localhost:8000/tag/analysis.html"  class="taglink">#analysis</a>
-          </li>
-          <li class="list-inline-item" style="font-size: 100.0%;">
-              <a href="http://localhost:8000/tag/bokeh.html"  class="taglink">#Bokeh</a>
-          </li>
-          <li class="list-inline-item" style="font-size: 100.0%;">
-              <a href="http://localhost:8000/tag/cartodb.html"  class="taglink">#cartodb</a>
-          </li>
-          <li class="list-inline-item" style="font-size: 100.0%;">
-              <a href="http://localhost:8000/tag/css.html"  class="taglink">#css</a>
-          </li>
-          <li class="list-inline-item" style="font-size: 100.0%;">
-              <a href="http://localhost:8000/tag/facebook.html"  class="taglink">#facebook</a>
-          </li>
-          <li class="list-inline-item" style="font-size: 125.0%;">
-              <a href="http://localhost:8000/tag/javascript.html"  class="taglink">#javascript</a>
-          </li>
-          <li class="list-inline-item" style="font-size: 125.0%;">
-              <a href="http://localhost:8000/tag/jupyter.html"  class="taglink">#jupyter</a>
-          </li>
-          <li class="list-inline-item" style="font-size: 100.0%;">
-              <a href="http://localhost:8000/tag/leaflet.html"  class="taglink">#leaflet</a>
-          </li>
-          <li class="list-inline-item" style="font-size: 100.0%;">
-              <a href="http://localhost:8000/tag/matplotlib.html"  class="taglink">#matplotlib</a>
-          </li>
-          <li class="list-inline-item" style="font-size: 100.0%;">
-              <a href="http://localhost:8000/tag/nltk.html"  class="taglink">#NLTK</a>
-          </li>
-          <li class="list-inline-item" style="font-size: 100.0%;">
-              <a href="http://localhost:8000/tag/notebook.html"  class="taglink">#notebook</a>
-          </li>
-          <li class="list-inline-item" style="font-size: 100.0%;">
-              <a href="http://localhost:8000/tag/pandas.html"  class="taglink">#pandas</a>
-          </li>
-          <li class="list-inline-item" style="font-size: 100.0%;">
-              <a href="http://localhost:8000/tag/pelican.html"  class="taglink">#pelican</a>
-          </li>
-          <li class="list-inline-item" style="font-size: 150.0%;">
-              <a href="http://localhost:8000/tag/python.html"  class="taglink">#python</a>
-          </li>
-          <li class="list-inline-item" style="font-size: 100.0%;">
-              <a href="http://localhost:8000/tag/udacity.html"  class="taglink">#udacity</a>
-          </li>
-  </ul>
-  </div>
-</div>
-
-<article class="row teaser">
-  <header class="col-sm-4 text-muted">
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2017-01-24T12:14:00+02:00">
+        <i class="fa fa-clock-o"></i>
+        24 January 2017
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="http://localhost:8000/category/misc.html">misc</a>
+      </li>
+    </ul>
   </header>
-  <div class="col-sm-8">
-    <h4 class="title"><a href="http://localhost:8000/posts/tropical-neglected-disease.html">Tropical Neglected Disease</a></h4>
-    <div class="content">
-      
-    </div>
+  <hr>
+  <div class="content">
+    <p><html>
+<head>
+<link href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" rel="stylesheet"/>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="leaflet-providers.js"></script>
+</head>
+<body>
+<div id="map" style="width: 100%; height: 300px;"></div>
+<script type="text/javascript">
+var map = L.map('map');
+var terrainTiles = L.tileLayer.provider('OpenTopoMap');
+terrainTiles.addTo(map);
+map.setView([35.9908385, -78.9005222], 3);</p>
+<p>function addDataToMap(data, map) {
+    var dataLayer = L.geoJson(data, {
+        onEachFeature: function(feature, layer) {
+            var popupText = "Magnitude: " + feature.properties.mag
+                + "<br>Location: " + feature.properties.place
+                + "<br><a href='" + feature.properties.url + "'>More info</a>";
+            layer.bindPopup(popupText); }
+        });
+    dataLayer.addTo(map);
+}</p>
+<p>$.getJSON("http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson", function(data) { addDataToMap(data, map); });
+</script>
+</body>
+</html></p>
   </div>
 </article>
+<hr>
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() {
+    this.page.url = 'http://localhost:8000/drafts/tropical-neglected-disease.html';
+    this.page.identifier = 'tropical-neglected-disease';
+  };
+  (function() {
+    var d = document;
+    var s = d.createElement('script');
+    s.src = '//helenedraux-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript class="text-muted">
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
     </div>
   </div>
 

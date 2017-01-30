@@ -31,8 +31,8 @@
 
 
 <meta name="description" content="Add an export button to your Leaflet map">
-<script src="https://code.jquery.com/jquery-1.12.4.min.js"   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="   crossorigin="anonymous"></script>
-<script src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.3.min.js"></script>
+<script src="https://helenedraux.github.io/theme/js/jquery-1.12.4.min.js"></script>
+<script src="https://helenedraux.github.io/theme/js/bokeh-0.12.3.min.js"></script>
 <script src="https://helenedraux.github.io/theme/js/custom.js"></script>
 <script>
   (function(i, s, o, g, r, a, m) {
@@ -105,7 +105,13 @@
   </header>
   <hr>
   <div class="content">
-    <p>I've recently needed to make a <strong>save/export static map</strong> from data stored in Cartodb and shown on a leaflet map. There are a couple of plugins for leaflet, but none was satisfying; either printing only around my map, or only the map. I also did not want to use the 'print' to pdf function of the browser, I wanted to save as an image. I found a few articles online, and <a href="https://groups.google.com/forum/#!topic/cartodb/VxysRLNUs6s">this one</a> mentioned html2canvas but without sharing any parameters.. and when I tried using it out of the box, I could not print the legend (which is the same as Cartodb embeded 'Save Map' function).
+    <div class="row">
+      <!-- https://afeld.github.io/bootstrap-toc/:sidebar, which will move to the top on a small screen -->
+      <!--div class="col-sm-3">
+        <nav id="toc" data-spy="affix" data-toggle="toc"></nav>
+      </div>
+      <div class="col-sm-9"-->
+        <p>I've recently needed to make a <strong>save/export static map</strong> from data stored in Cartodb and shown on a leaflet map. There are a couple of plugins for leaflet, but none was satisfying; either printing only around my map, or only the map. I also did not want to use the 'print' to pdf function of the browser, I wanted to save as an image. I found a few articles online, and <a href="https://groups.google.com/forum/#!topic/cartodb/VxysRLNUs6s">this one</a> mentioned html2canvas but without sharing any parameters.. and when I tried using it out of the box, I could not print the legend (which is the same as Cartodb embeded 'Save Map' function).
 I eventually used this configuration:</p>
 <div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">printmap</span><span class="p">(){</span>
   <span class="kd">var</span> <span class="nx">screenshot</span> <span class="o">=</span> <span class="p">{};</span>
@@ -133,6 +139,7 @@ I eventually used this configuration:</p>
 <span class="p">}</span>
 </pre></div>
 <p>I call this function with an <a href="https://github.com/CliffCloud/Leaflet.EasyButton">easy button</a> from the Leaflet map.</p>
+      <!--/div-->    
   </div>
 </article>
 <hr>
@@ -163,7 +170,9 @@ I eventually used this configuration:</p>
                       <div class="col-sm-4 card-wrapper">
                           <div class="card related-art">
                             <a href="https://helenedraux.github.io/posts/reveal-code-on-jupyter-notebook.html">
+                            <div class="image relatedimage">
                               <img class="card-img-top img-responsive img-feat-rel" src="/images/revealcode.png">
+                            </div>
                             </a>
                             <div class="card-block">
                                 <h4 class="card-title"><a href="https://helenedraux.github.io/posts/reveal-code-on-jupyter-notebook.html">"Reveal Code" button on Jupyter</a></h4>
