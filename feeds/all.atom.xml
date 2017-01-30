@@ -6,7 +6,7 @@
 &lt;p&gt;The &lt;a href="http://apps.who.int/gho/data/node.main.A1629?lang=en"&gt;World Health Organisation&lt;/a&gt; lists 17 NTDs in 149 countries. However, not all diseases have global datasets. These datasets contain data of: new cases reported (&lt;em&gt;incidence&lt;/em&gt;), cases (&lt;em&gt;prevalence&lt;/em&gt;), individuals treated, and deaths in the case of rabies. Some of the NTDs data were more complicated to acquire, so they are not included in this analysis.&lt;/p&gt;
 &lt;h3&gt;Background on theses diseases&lt;/h3&gt;
 &lt;p&gt;Neglected Tropical Diseases (NTDs) are transmitted by flies, rabids, worms, or other people. In the buruli ulcer's case, the cause is even unknown. The consequences range from temporary disabilities (Dracunculiasis) to deaths (rabies). Most are easily cured (e.g. leprosy, rabies), but for some prevention is still difficult (Buruli ulcer).&lt;/p&gt;
-&lt;table class="table-striped table-sm table table-hover" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;"&gt;
+&lt;table class="table-hover table table-striped table-sm" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;"&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;&lt;/th&gt;&lt;th&gt;NTD&lt;/th&gt;&lt;th&gt;Disease&lt;/th&gt;&lt;td&gt;Vehicle&lt;/td&gt;&lt;td&gt;Consequence&lt;/td&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;1&lt;/th&gt;&lt;td&gt;Rabies&lt;/td&gt;&lt;td&gt;Viral&lt;/td&gt;&lt;td&gt;Rabids&lt;/td&gt;&lt;td&gt;Death&lt;/td&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;2&lt;/th&gt;&lt;td&gt;Human African Trypanosomiasis (Tb Rhodesiense)&lt;/td&gt;&lt;td&gt;Parasitic&lt;/td&gt;&lt;td&gt;Tsetse fly&lt;/td&gt;&lt;td&gt;Nervous system&lt;/td&gt;&lt;/tr&gt;
@@ -21,7 +21,7 @@
 &lt;p&gt;Some countries have managed to eradicate some NTDs (e.g. Mexico eradicated onchocerciasis), but NTDs are still endemic in many countries. Cutaneous leishmaniasis, also called the Aleppo boil, seem to be coming back in 2016, principally in refugees fleeing Middle Eastern countries. &lt;/p&gt;
 &lt;h3&gt;Available data&lt;/h3&gt;
 &lt;p&gt;I downloaded data for 8 NTDs:
-&lt;table class="table-striped table-sm table table-hover" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;"&gt;
+&lt;table class="table-hover table table-striped table-sm" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;"&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;&lt;/th&gt;&lt;th&gt;NTD&lt;/th&gt;&lt;th&gt;Data&lt;/th&gt;&lt;td&gt;Measure&lt;/td&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;1&lt;/th&gt;&lt;td&gt;Rabies&lt;/td&gt;&lt;td&gt;Reported number of human rabies deaths&lt;/td&gt;&lt;td&gt;Mortality&lt;/td&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;2&lt;/th&gt;&lt;td&gt;Human African Trypanosomiasis (Tb Rhodesiense)&lt;/td&gt;&lt;td&gt;Number of &lt;strong&gt;new&lt;/strong&gt; reported cases&lt;/td&gt;&lt;td&gt;Incidence&lt;/td&gt;&lt;/tr&gt;
@@ -46,7 +46,7 @@
 &lt;h1&gt;2. Data cleaning &amp;amp; preparation in R&lt;/h1&gt;
 &lt;h2&gt;Data cleaning&lt;/h2&gt;
 &lt;p&gt;The data I downloaded consisted of CSV files, one per disease. Each CSV file included only a selection of sovereign states with data for a selected few years (1990-2015). Missing data was inconsistent: some countries only had 'No data' while others had only '0'; however it was not clear if the "0" referred to missing data or to no data. For instance in Guinea-Bissau, cases of onchocerciasis (river blindness) were as following:&lt;/p&gt;
-&lt;table class="table-striped table-sm table table-hover" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;"&gt;
+&lt;table class="table-hover table table-striped table-sm" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;"&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;Country&lt;/th&gt;&lt;th&gt;2015&lt;/th&gt;&lt;th&gt;2014&lt;/th&gt;&lt;th&gt;2013&lt;/th&gt;&lt;th&gt;2012&lt;/th&gt;&lt;th&gt;2011&lt;/th&gt;&lt;th&gt;2010&lt;/th&gt;&lt;th&gt;2009&lt;/th&gt;&lt;th&gt;2008&lt;/th&gt;&lt;th&gt;2007&lt;/th&gt;&lt;th&gt;2006&lt;/th&gt;&lt;th&gt;2005&lt;/th&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;Guinea-Bissau&lt;/th&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;124517&lt;/td&gt;&lt;td&gt;107278&lt;/td&gt;&lt;td&gt;107835&lt;/td&gt;&lt;td&gt;135014&lt;/td&gt;&lt;td&gt;NA&lt;/td&gt;&lt;td&gt;NA&lt;/td&gt;&lt;td&gt;70616&lt;/td&gt;&lt;td&gt;NA&lt;/td&gt;&lt;td&gt;NA&lt;/td&gt;&lt;td&gt;NA&lt;/td&gt;&lt;/tr&gt;
 &lt;/table&gt;
@@ -99,6 +99,23 @@ w8&lt;span class="o"&gt;$&lt;/span&gt;rabies_norm &lt;span class="o"&gt;&amp;lt;
 &lt;p&gt;to:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Guinea-Bissau, Philippines, Zimbabwe
 &lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Visualise change with Tableau&lt;/h2&gt;
+&lt;p&gt;I used &lt;a href="tableau"&gt;Tableau&lt;/a&gt; to visualise change over time. The three graphs below correspond to the countries that have had the most change in the data available: Uganda, Mali, and Benin. &lt;/p&gt;
+&lt;p&gt;The embedded dashboard is interactive; it is possible to filter by Country, disease, and years to allow more exploration. The legend is also interactive, so click on any disease's name to highlight it.&lt;/p&gt;
+&lt;div class="tableauPlaceholder" id="viz1485785145275" style="position: relative"&gt;&lt;noscript&gt;&lt;a href="#"&gt;&lt;img alt="Dashboard 1 " class="img-fluid" src="https://public.tableau.com/static/images/NT/NTD_dashboard/Dashboard1/1_rss.png" style="border: none"/&gt;&lt;/a&gt;&lt;/noscript&gt;&lt;object class="tableauViz" style="display:none;"&gt;&lt;param name="host_url" value="https%3A%2F%2Fpublic.tableau.com%2F"&gt;&lt;/param&gt; &lt;param name="site_root" value=""&gt;&lt;/param&gt;&lt;param name="name" value="NTD_dashboard/Dashboard1"&gt;&lt;/param&gt;&lt;param name="tabs" value="no"&gt;&lt;/param&gt;&lt;param name="toolbar" value="yes"&gt;&lt;/param&gt;&lt;param name="static_image" value="https://public.tableau.com/static/images/NT/NTD_dashboard/Dashboard1/1.png"&gt;&lt;/param&gt; &lt;param name="animate_transition" value="yes"&gt;&lt;/param&gt;&lt;param name="display_static_image" value="yes"&gt;&lt;/param&gt;&lt;param name="display_spinner" value="yes"&gt;&lt;/param&gt;&lt;param name="display_overlay" value="yes"&gt;&lt;/param&gt;&lt;param name="display_count" value="yes"&gt;&lt;/param&gt;&lt;/object&gt;&lt;/div&gt;
+&lt;script type="text/javascript"&gt;
+var divElement = document.getElementById('viz1485785145275');
+var vizElement = divElement.getElementsByTagName('object')[0];
+vizElement.style.minWidth='424px';
+/*vizElement.style.maxWidth='654px';*/
+vizElement.style.width='100%';
+vizElement.style.minHeight='629px';
+vizElement.style.maxHeight='929px';
+vizElement.style.height=(divElement.offsetWidth*0.75)+'px';
+var scriptElement = document.createElement('script');
+scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+vizElement.parentNode.insertBefore(scriptElement, vizElement);
+&lt;/script&gt;
 &lt;h1&gt;3. Statistical analysis&lt;/h1&gt;
 &lt;h2&gt;Countries with the highest count of diseases&lt;/h2&gt;
 &lt;p&gt;Countries are not affected in the same way by NTDs - some have multiple (up to 5), while others are still struggling with just one.&lt;/p&gt;
@@ -1302,10 +1319,10 @@ h6:hover .anchor-link {
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
-&lt;div id="c118880d-854e-4dfe-87b7-126018816d8c"&gt;&lt;/div&gt;
+&lt;div id="8d952f64-0d3c-4787-aea3-1fd082884a50"&gt;&lt;/div&gt;
 &lt;div class="output_subarea output_javascript "&gt;
 &lt;script type="text/javascript"&gt;
-var element = $('#c118880d-854e-4dfe-87b7-126018816d8c');
+var element = $('#8d952f64-0d3c-4787-aea3-1fd082884a50');
 
 (function(global) {
   function now() {

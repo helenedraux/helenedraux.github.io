@@ -118,7 +118,7 @@
 <p>The <a href="http://apps.who.int/gho/data/node.main.A1629?lang=en">World Health Organisation</a> lists 17 NTDs in 149 countries. However, not all diseases have global datasets. These datasets contain data of: new cases reported (<em>incidence</em>), cases (<em>prevalence</em>), individuals treated, and deaths in the case of rabies. Some of the NTDs data were more complicated to acquire, so they are not included in this analysis.</p>
 <h3>Background on theses diseases</h3>
 <p>Neglected Tropical Diseases (NTDs) are transmitted by flies, rabids, worms, or other people. In the buruli ulcer's case, the cause is even unknown. The consequences range from temporary disabilities (Dracunculiasis) to deaths (rabies). Most are easily cured (e.g. leprosy, rabies), but for some prevention is still difficult (Buruli ulcer).</p>
-<table class="table-striped table-sm table table-hover" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;">
+<table class="table-hover table table-striped table-sm" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;">
 <tr><th scope="row"></th><th>NTD</th><th>Disease</th><td>Vehicle</td><td>Consequence</td></tr>
 <tr><th scope="row">1</th><td>Rabies</td><td>Viral</td><td>Rabids</td><td>Death</td></tr>
 <tr><th scope="row">2</th><td>Human African Trypanosomiasis (Tb Rhodesiense)</td><td>Parasitic</td><td>Tsetse fly</td><td>Nervous system</td></tr>
@@ -133,7 +133,7 @@
 <p>Some countries have managed to eradicate some NTDs (e.g. Mexico eradicated onchocerciasis), but NTDs are still endemic in many countries. Cutaneous leishmaniasis, also called the Aleppo boil, seem to be coming back in 2016, principally in refugees fleeing Middle Eastern countries. </p>
 <h3>Available data</h3>
 <p>I downloaded data for 8 NTDs:
-<table class="table-striped table-sm table table-hover" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;">
+<table class="table-hover table table-striped table-sm" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;">
 <tr><th scope="row"></th><th>NTD</th><th>Data</th><td>Measure</td></tr>
 <tr><th scope="row">1</th><td>Rabies</td><td>Reported number of human rabies deaths</td><td>Mortality</td></tr>
 <tr><th scope="row">2</th><td>Human African Trypanosomiasis (Tb Rhodesiense)</td><td>Number of <strong>new</strong> reported cases</td><td>Incidence</td></tr>
@@ -158,7 +158,7 @@
 <h1>2. Data cleaning &amp; preparation in R</h1>
 <h2>Data cleaning</h2>
 <p>The data I downloaded consisted of CSV files, one per disease. Each CSV file included only a selection of sovereign states with data for a selected few years (1990-2015). Missing data was inconsistent: some countries only had 'No data' while others had only '0'; however it was not clear if the "0" referred to missing data or to no data. For instance in Guinea-Bissau, cases of onchocerciasis (river blindness) were as following:</p>
-<table class="table-striped table-sm table table-hover" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;">
+<table class="table-hover table table-striped table-sm" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;">
 <tr><th scope="row">Country</th><th>2015</th><th>2014</th><th>2013</th><th>2012</th><th>2011</th><th>2010</th><th>2009</th><th>2008</th><th>2007</th><th>2006</th><th>2005</th></tr>
 <tr><th scope="row">Guinea-Bissau</th><td>0</td><td>124517</td><td>107278</td><td>107835</td><td>135014</td><td>NA</td><td>NA</td><td>70616</td><td>NA</td><td>NA</td><td>NA</td></tr>
 </table>
@@ -211,6 +211,23 @@ w8<span class="o">$</span>rabies_norm <span class="o">&lt;-</span> <span class="
 <p>to:</p>
 <div class="highlight"><pre><span></span>Guinea-Bissau, Philippines, Zimbabwe
 </pre></div>
+<h2>Visualise change with Tableau</h2>
+<p>I used <a href="tableau">Tableau</a> to visualise change over time. The three graphs below correspond to the countries that have had the most change in the data available: Uganda, Mali, and Benin. </p>
+<p>The embedded dashboard is interactive; it is possible to filter by Country, disease, and years to allow more exploration. The legend is also interactive, so click on any disease's name to highlight it.</p>
+<div class="tableauPlaceholder" id="viz1485785145275" style="position: relative"><noscript><a href="#"><img alt="Dashboard 1 " class="img-fluid" src="https://public.tableau.com/static/images/NT/NTD_dashboard/Dashboard1/1_rss.png" style="border: none"/></a></noscript><object class="tableauViz" style="display:none;"><param name="host_url" value="https%3A%2F%2Fpublic.tableau.com%2F"></param> <param name="site_root" value=""></param><param name="name" value="NTD_dashboard/Dashboard1"></param><param name="tabs" value="no"></param><param name="toolbar" value="yes"></param><param name="static_image" value="https://public.tableau.com/static/images/NT/NTD_dashboard/Dashboard1/1.png"></param> <param name="animate_transition" value="yes"></param><param name="display_static_image" value="yes"></param><param name="display_spinner" value="yes"></param><param name="display_overlay" value="yes"></param><param name="display_count" value="yes"></param></object></div>
+<script type="text/javascript">
+var divElement = document.getElementById('viz1485785145275');
+var vizElement = divElement.getElementsByTagName('object')[0];
+vizElement.style.minWidth='424px';
+/*vizElement.style.maxWidth='654px';*/
+vizElement.style.width='100%';
+vizElement.style.minHeight='629px';
+vizElement.style.maxHeight='929px';
+vizElement.style.height=(divElement.offsetWidth*0.75)+'px';
+var scriptElement = document.createElement('script');
+scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+vizElement.parentNode.insertBefore(scriptElement, vizElement);
+</script>
 <h1>3. Statistical analysis</h1>
 <h2>Countries with the highest count of diseases</h2>
 <p>Countries are not affected in the same way by NTDs - some have multiple (up to 5), while others are still struggling with just one.</p>
