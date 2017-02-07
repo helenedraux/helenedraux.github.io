@@ -118,7 +118,7 @@
 <p>The <a href="http://apps.who.int/gho/data/node.main.A1629?lang=en">World Health Organisation</a> lists 17 NTDs in 149 countries. However, not all diseases have global datasets. These datasets contain data of: new cases reported (<em>incidence</em>), cases (<em>prevalence</em>), individuals treated, and deaths in the case of rabies. Some of the NTDs data were more complicated to acquire, so they are not included in this analysis.</p>
 <h3>Background on theses diseases</h3>
 <p>Neglected Tropical Diseases (NTDs) are transmitted by flies, rabids, worms, or other people. In the buruli ulcer's case, the cause is even unknown. The consequences range from temporary disabilities (Dracunculiasis) to deaths (rabies). Most are easily cured (e.g. leprosy, rabies), but for some prevention is still difficult (Buruli ulcer).</p>
-<table class="table-hover table table-striped table-sm" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;">
+<table class="table-striped table-sm table-hover table" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;">
 <tr><th scope="row"></th><th>NTD</th><th>Disease</th><td>Vehicle</td><td>Consequence</td></tr>
 <tr><th scope="row">1</th><td>Rabies</td><td>Viral</td><td>Rabids</td><td>Death</td></tr>
 <tr><th scope="row">2</th><td>Human African Trypanosomiasis (Tb Rhodesiense)</td><td>Parasitic</td><td>Tsetse fly</td><td>Nervous system</td></tr>
@@ -133,7 +133,7 @@
 <p>Some countries have managed to eradicate some NTDs (e.g. Mexico eradicated onchocerciasis), but NTDs are still endemic in many countries. Cutaneous leishmaniasis, also called the Aleppo boil, seem to be coming back in 2016, principally in refugees fleeing Middle Eastern countries. </p>
 <h3>Available data</h3>
 <p>I downloaded data for 8 NTDs:
-<table class="table-hover table table-striped table-sm" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;">
+<table class="table-striped table-sm table-hover table" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;">
 <tr><th scope="row"></th><th>NTD</th><th>Data</th><td>Measure</td></tr>
 <tr><th scope="row">1</th><td>Rabies</td><td>Reported number of human rabies deaths</td><td>Mortality</td></tr>
 <tr><th scope="row">2</th><td>Human African Trypanosomiasis (Tb Rhodesiense)</td><td>Number of <strong>new</strong> reported cases</td><td>Incidence</td></tr>
@@ -158,7 +158,7 @@
 <h1>2. Data cleaning &amp; preparation in R</h1>
 <h2>Data cleaning</h2>
 <p>The data I downloaded consisted of CSV files, one per disease. Each CSV file included only a selection of sovereign states with data for a selected few years (1990-2015). Missing data was inconsistent: some countries only had 'No data' while others had only '0'; however it was not clear if the "0" referred to missing data or to no data. For instance in Guinea-Bissau, cases of onchocerciasis (river blindness) were as following:</p>
-<table class="table-hover table table-striped table-sm" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;">
+<table class="table-striped table-sm table-hover table" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;">
 <tr><th scope="row">Country</th><th>2015</th><th>2014</th><th>2013</th><th>2012</th><th>2011</th><th>2010</th><th>2009</th><th>2008</th><th>2007</th><th>2006</th><th>2005</th></tr>
 <tr><th scope="row">Guinea-Bissau</th><td>0</td><td>124517</td><td>107278</td><td>107835</td><td>135014</td><td>NA</td><td>NA</td><td>70616</td><td>NA</td><td>NA</td><td>NA</td></tr>
 </table>
