@@ -1,12 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Data science w/ a geo bias</title><link href="https://helenedraux.github.io/" rel="alternate"></link><link href="https://helenedraux.github.io/feeds/all.atom.xml" rel="self"></link><id>https://helenedraux.github.io/</id><updated>2017-01-24T12:14:00+02:00</updated><entry><title>Tropical Neglected Disease</title><link href="https://helenedraux.github.io/posts/tropical-neglected-disease.html" rel="alternate"></link><published>2017-01-24T12:14:00+02:00</published><updated>2017-01-24T12:14:00+02:00</updated><author><name>Hélène</name></author><id>tag:helenedraux.github.io,2017-01-24:/posts/tropical-neglected-disease.html</id><summary type="html"></summary><content type="html">&lt;p&gt;&lt;strong&gt; Neglected Tropical Disease &lt;/strong&gt; (NTD) are not &lt;em&gt;rare&lt;/em&gt; diseases, but diseases that persist in neglected areas. Most of them are curable diseases, and have diseappeared from developed countries. An introduction of these diseases is made by the &lt;a href="https://www.youtube.com/watch?v=r12mYCr0G7c"&gt;Médecins Sans Frontières&lt;/a&gt;, and this &lt;a href="https://www.youtube.com/watch?v=DDb_8GMwmj0"&gt;discussion&lt;/a&gt; present the issues around giving help to these regions, notably logistics. In the scientifique publication community, this &lt;a href="http://journals.plos.org/plosntds/article?id=10.1371/journal.pntd.0003895"&gt;recent paper&lt;/a&gt; on &lt;em&gt;Eliminating the Neglected Tropical Diseases: Translational Science and New Technologies&lt;/em&gt; is particularly interesting.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Data science w/ a geo bias</title><link href="https://helenedraux.github.io/" rel="alternate"></link><link href="https://helenedraux.github.io/feeds/all.atom.xml" rel="self"></link><id>https://helenedraux.github.io/</id><updated>2017-02-13T15:23:00+02:00</updated><entry><title>Shiny map interface</title><link href="https://helenedraux.github.io/posts/shinymapinterface.html" rel="alternate"></link><published>2017-02-13T15:23:00+02:00</published><updated>2017-02-13T15:23:00+02:00</updated><author><name>Hélène</name></author><id>tag:helenedraux.github.io,2017-02-13:/posts/shinymapinterface.html</id><summary type="html"></summary><content type="html">&lt;p&gt;After discovering R last month, I had to try Shiny. Over the past years, I've done many user interfaces:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://trap5.dk/kort/"&gt;Landscape Digital Atlas of Denmark&lt;/a&gt;,&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.havfriluftsliv.dk/result/result-1year.html"&gt;1 year result of a mapping survey I had designed&lt;/a&gt;,&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.helenedraux.net/portfolio/d3-gallery/"&gt;an advent calendar with a d3-graph a day&lt;/a&gt;,&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;so it was tempting to try Shiny. Interaction without JavaScript? I love JavaScript, but I want to see how that can work!&lt;/p&gt;
+&lt;p&gt;Since I'm largely geo-biased, I was happy to make a map interface for the UN in order to map reports of what is happening in Syria. I used Leaflet for R, which I've used in the past as a JavaScript library, and created this very simple &lt;a href="https://helenedraux.shinyapps.io/mapinterface/"&gt;Shiny app&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="countries_percAffected alt &amp;lt;&amp;gt;" class="img-fluid" src="https://helenedraux.github.io/images/shinyapp.png"/&gt;&lt;/p&gt;
+&lt;p&gt;In this blog post I present the app I've built, the data I used, and the interface. I then explain how I speed up the map, and then I conclude with my impressions of Shiny.&lt;/p&gt;
+&lt;h2&gt;0. Overview&lt;/h2&gt;
+&lt;p&gt;The app has two main objectives:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Being an interface for the administrative borders of Syria for the team in charge of recording the reports&lt;/li&gt;
+&lt;li&gt;Mapping the Excel reports to explore them using filters for date and some themes.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I also tried to code the export in KML but unfortunately there seem to be a bug with the KML module of OGR package. I managed to export as a shapefile, or geojson, but these are not format that are easy to use without a proper GIS software (GoogleEarth may be borderline GIS software, it is only borderline in my opinion), so I moved into creating a better interface so the team would not need to use GoogleEarth.&lt;/p&gt;
+&lt;h2&gt;1. The data&lt;/h2&gt;
+&lt;p&gt;I used the data available at &lt;a href="https://data.humdata.org/dataset/syrian-arab-republic-administrative-boundaries-populated-places"&gt;Humanitarian Data Exchange&lt;/a&gt; to show the 3 levels of administrative borders (Governorate, District and Subdistrict), and the communities.&lt;/p&gt;
+&lt;h3&gt;Administrative level&lt;/h3&gt;
+&lt;p&gt;The data is relatively heavy, so I transformed it in &lt;a href="https://github.com/topojson/topojson"&gt;topojson&lt;/a&gt;, and combined the three layers into one. Topojson is such a life saver when making webmap with accurate data!&lt;/p&gt;
+&lt;p&gt;I first renamed the fields from NAME_EN (they all had the same name) to the name of the layer (governorate, .. ), removed all the other fields, and then used the &lt;a href="https://github.com/mbloch/mapshaper"&gt;mapshaper&lt;/a&gt; tool, to combined them all together with the following command line:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;mapshaper -i syria_adm1.shp syria_adm2.shp syria_adm3.shp combine-files -o syria.topojson
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Communities&lt;/h3&gt;
+&lt;p&gt;The data provided by HDX contains the cities as polygons or points (the geographic center of the city). I thought of including the cities as polygons, but to make the application lighter, it is better to have them as points.&lt;/p&gt;
+&lt;h2&gt;2. The interface&lt;/h2&gt;
+&lt;p&gt;In making map dashboards, I always ensure that the users can find their way through the map. This means providing multiple basemaps and layers, data query tools, but also adding enough tools to navigate the map, for instance using a "Back Home" button. I also like making sure there are feedback with dynamic text or highlights, but it's a little bit more clunky in pure R.&lt;/p&gt;
+&lt;h3&gt;Layers&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Basemaps&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I selected two basemaps: the OSM (OpenStreetMap) and the HOT (Humanitarian OpenStreetMap Team): they don't have too much details, with faded colors, so it's possible to add more layers on them; and they have enough information to give a good context to the data.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Overlay maps&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Overlay maps are the layers specific to Syria: two topojson files for administrative areas and a csv point file.&lt;/p&gt;
+&lt;h3&gt;Mapping tools&lt;/h3&gt;
+&lt;p&gt;The mapping tools include zooms "in" and "out". Leaflet for R doesn't yet provide out of the box option to move the zooms in either corner of the map, so I kept them in the top left corner. I added an actionButton:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;actionButton&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"gobackhome"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;""&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; icon &lt;span class="o"&gt;=&lt;/span&gt; icon&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"globe"&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;with the CSS:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nn"&gt;#gobackhome&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nb"&gt;position&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;absolute&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="nb"&gt;z-index&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;10&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="nb"&gt;top&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;70px&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="nb"&gt;left&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;10px&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="n"&gt;box&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;shadow&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;rgba&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;65098&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="m"&gt;0px&lt;/span&gt; &lt;span class="m"&gt;1px&lt;/span&gt; &lt;span class="m"&gt;5px&lt;/span&gt; &lt;span class="m"&gt;0px&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="nb"&gt;padding&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;4px&lt;/span&gt; &lt;span class="m"&gt;6px&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;so it would be just under the zooms.&lt;/p&gt;
+&lt;h3&gt;Interactivity&lt;/h3&gt;
+&lt;p&gt;I added two ways to query the data:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Click on the map to get the location&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I couldn't find any documentation on the event name for the map click on a topojson file (the click on marker or shapes are documented, but not for topojson). I tried my luck with &lt;code&gt;map_topojson_click&lt;/code&gt; and was pleasantly surprised it worked! So I made an observeEvent:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;observeEvent&lt;span class="p"&gt;(&lt;/span&gt;input&lt;span class="o"&gt;$&lt;/span&gt;map_topojson_click&lt;span class="p"&gt;,{&lt;/span&gt;
+    output&lt;span class="o"&gt;$&lt;/span&gt;location_topojson &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; renderUI&lt;span class="p"&gt;({&lt;/span&gt;
+      gov &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;paste&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"&amp;lt;b&amp;gt;Governate&amp;lt;/b&amp;gt;: "&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; input&lt;span class="o"&gt;$&lt;/span&gt;map_topojson_click&lt;span class="o"&gt;$&lt;/span&gt;properties&lt;span class="o"&gt;$&lt;/span&gt;Governorat&lt;span class="p"&gt;)&lt;/span&gt;
+      district &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;paste&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"&amp;lt;b&amp;gt;-&amp;gt; District&amp;lt;/b&amp;gt;: "&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;input&lt;span class="o"&gt;$&lt;/span&gt;map_topojson_click&lt;span class="o"&gt;$&lt;/span&gt;properties&lt;span class="o"&gt;$&lt;/span&gt;District&lt;span class="p"&gt;)&lt;/span&gt;
+      subdistrict &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;paste&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"&amp;lt;b&amp;gt;--&amp;gt; Sub district&amp;lt;/b&amp;gt;: "&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;input&lt;span class="o"&gt;$&lt;/span&gt;map_topojson_click&lt;span class="o"&gt;$&lt;/span&gt;properties&lt;span class="o"&gt;$&lt;/span&gt;Subdistric&lt;span class="p"&gt;)&lt;/span&gt;
+      HTML&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;paste&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;gov&lt;span class="p"&gt;,&lt;/span&gt; district&lt;span class="p"&gt;,&lt;/span&gt; subdistrict&lt;span class="p"&gt;,&lt;/span&gt; sep &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;'&amp;lt;br/&amp;gt;'&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+    &lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;For the city, the popup was very easily to encode with &lt;code&gt;popup=cities$Community&lt;/code&gt; when creating them.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Select the location&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Largely inspired by this &lt;a href="https://blog.snap.uaf.edu/2016/03/16/r-shiny-leaflet-using-observers/"&gt;blog post&lt;/a&gt;, I added some interactivity to the map with an observer to the map click. The principle is to create an empty layer of points (&lt;code&gt;pt_selected&lt;/code&gt;) with a style that stands out (e.g. color and size), and to dynamically add and remove the point that should be highlighted or not.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pt_selected &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;map&lt;span class="p"&gt;,&lt;/span&gt; x&lt;span class="p"&gt;,&lt;/span&gt; y&lt;span class="p"&gt;)&lt;/span&gt; addCircleMarkers&lt;span class="p"&gt;(&lt;/span&gt;map&lt;span class="p"&gt;,&lt;/span&gt; x&lt;span class="p"&gt;,&lt;/span&gt; y&lt;span class="p"&gt;,&lt;/span&gt; radius&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; color&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"black"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; fillColor&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"orange"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; fillOpacity&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; opacity&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;  weight&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; stroke&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;TRUE&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; layerId&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"Selected"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+observeEvent&lt;span class="p"&gt;(&lt;/span&gt;input&lt;span class="o"&gt;$&lt;/span&gt;Map_marker_click&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    p &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; input&lt;span class="o"&gt;$&lt;/span&gt;Map_marker_click
+    proxy &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; leafletProxy&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"map"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="kr"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;p&lt;span class="o"&gt;$&lt;/span&gt;id&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="s"&gt;"Selected"&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+      proxy &lt;span class="o"&gt;%&amp;gt;%&lt;/span&gt; removeMarker&lt;span class="p"&gt;(&lt;/span&gt;layerId&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"Selected"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="kr"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      proxy &lt;span class="o"&gt;%&amp;gt;%&lt;/span&gt; setView&lt;span class="p"&gt;(&lt;/span&gt;lng&lt;span class="o"&gt;=&lt;/span&gt;p&lt;span class="o"&gt;$&lt;/span&gt;X&lt;span class="p"&gt;,&lt;/span&gt; lat&lt;span class="o"&gt;=&lt;/span&gt;p&lt;span class="o"&gt;$&lt;/span&gt;Y&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;12&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%&amp;gt;%&lt;/span&gt; pt_selected&lt;span class="p"&gt;(&lt;/span&gt;p&lt;span class="o"&gt;$&lt;/span&gt;X&lt;span class="p"&gt;,&lt;/span&gt; p&lt;span class="o"&gt;$&lt;/span&gt;Y&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;#replaced input$Map_zoom by 3&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The points are highlighted by two successive drop-down boxes: the first one selects a governorate, and the second a city within that governorate. I also added a layer of points representing the center of the polygons, and zoom on these when the governorate is selected. I think it would be better to use the bounding box, but I just selected a zoom and the center instead.&lt;/p&gt;
+&lt;h3&gt;Side panel&lt;/h3&gt;
+&lt;p&gt;I made a side panel to display all the tools specific to the interface: exploring locations, uploading files, and exploring the file. Each tool is on a tab; Shiny makes the creation of such tabs very easy.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Exploring locations&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The map can be explored in two ways:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Click on the map&lt;/strong&gt; gives a &lt;strong&gt;location&lt;/strong&gt;: governorate, district and subdistrict. That's where using a topojson file with combined files comes in really handy: since it's the same object, we only need to query one layer for three different attributes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Location&lt;/strong&gt; selected in the successive dropdowns &lt;strong&gt;zooms to their location on the map&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Select a location&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;On the 'Explore' tab of the panel, there are two drop downs: the first one for the governorates, and the second one for the cities. When a governorate is selected, the cities in the second drop down are the subset of cities in that governorate.&lt;/p&gt;
+&lt;h2&gt;Speeding up the map&lt;/h2&gt;
+&lt;p&gt;To make an interface that is well defined (good geographic data) but also easy to navigate, I used the following specifications:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Use point data as often as possible (for small cities)&lt;/li&gt;
+&lt;li&gt;Use topojson&lt;/li&gt;
+&lt;li&gt;Simplify geographic data&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;load the data after the basemaps are loaded:&lt;/p&gt;
+&lt;p&gt;:::R
+session$onFlushed(once=TRUE, function() {
+leafletProxy("map") %&amp;gt;%
+  addTopoJSON(neighbourhoods, weight = 1, color = "red",fillOpacity = 0.2,group ="Neighbourhoods" ) %&amp;gt;%
+  addTopoJSON(syria, weight = 1, dashArray="15, 10, 5", color = "#444444",fillOpacity = 0.01,group ="Admin. borders" ) %&amp;gt;%
+  addCircleMarkers(cities$X,cities$Y,color="navy",popup =cities$Community,radius = 3,stroke = FALSE,fillOpacity = 0.5,group="Communities")
+})&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Using Shiny&lt;/h2&gt;
+&lt;h3&gt;Shiny language&lt;/h3&gt;
+&lt;p&gt;Shiny was developed to enable quick development of webpages without knowledge of HTML/CSS/JavaScript. This is true for very simple apps: it is pretty fast to create simple interactions between the data and the visualisation. However, beyond very simple interactions, either it becomes more complex and programmers need to understand basic concepts of interactive coding (some questions on stackoverflow are very very basic and show that many programmers jump into shiny without understanding simple concepts of interactions), or it simply requires to add some JavaScript. That defeats a little bit the point of coding a shiny app - why not writing in JavaScript from the start? ]Unless R code is intensively used, it might be better to learn to use JavaScript. Especially when you know JavaScript already, learning the observer/reaction events can feel a bit like a waste of time.
+Shiny is also evolving pretty quickly: for instance there used to be only an &lt;code&gt;observe&lt;/code&gt; function, and so "observe" only one event, the code had to include &lt;code&gt;if (is.null(value)) return(NULL)&lt;/code&gt;, but now Shiny includes &lt;code&gt;observeEvent&lt;/code&gt; for specific events.&lt;/p&gt;
+&lt;p&gt;From my experience in Copenhagen University, where the statistics department develops apps for non R users, and videos watched on Youtube, it sounds like a large part of developers are actually spending a lot of time on developing apps. So they are akin to professional coders.. why not learning JavaScript? That's not really a serious question, but I wonder if creating a meta-language was really necessary. I guess that's what most people do anyway! JavaScript on top of Shiny. It's not very performant, but for performance I don't know of anything that beats D3.&lt;/p&gt;
+&lt;h3&gt;shinyapp.io&lt;/h3&gt;
+&lt;p&gt;The webplatform &lt;a href="shinyapp.io"&gt;shinyapp.io&lt;/a&gt; is meant to easily publish shiny based apps online. The free version gives 5 apps available 25 hours per month. That's a good offer (since it's free!), although I find the time restriction very limiting for (semi)-professional apps. On the performance side, the applications are very very slow and I wonder if it wouldn't be easier to use a dedicated service for that, even paying.&lt;/p&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Shiny is an easy-to-use language in order to quickly provide some interface for anyone to use R-based analysis. This means that non-R users can have access to interfaces without learning R, and makes it easier for R coders to discuss with non-technical people. Anything more complex requires some knowledge of JavaScript, but being able to use R functions on the fly in a browser is really interesting!&lt;/p&gt;
+&lt;p&gt;Have a look at my app &lt;a href="https://helenedraux.shinyapps.io/mapinterface/"&gt;here&lt;/a&gt;, and tell me what you think!&lt;/p&gt;</content><category term="R"></category><category term="Shiny"></category><category term="platform"></category><category term="Visualisation"></category></entry><entry><title>Tropical Neglected Disease</title><link href="https://helenedraux.github.io/posts/tropical-neglected-disease.html" rel="alternate"></link><published>2017-01-24T12:14:00+02:00</published><updated>2017-01-24T12:14:00+02:00</updated><author><name>Hélène</name></author><id>tag:helenedraux.github.io,2017-01-24:/posts/tropical-neglected-disease.html</id><summary type="html"></summary><content type="html">&lt;p&gt;&lt;strong&gt; Neglected Tropical Disease &lt;/strong&gt; (NTD) are not &lt;em&gt;rare&lt;/em&gt; diseases, but diseases that persist in neglected areas. Most of them are curable diseases, and have diseappeared from developed countries. An introduction of these diseases is made by the &lt;a href="https://www.youtube.com/watch?v=r12mYCr0G7c"&gt;Médecins Sans Frontières&lt;/a&gt;, and this &lt;a href="https://www.youtube.com/watch?v=DDb_8GMwmj0"&gt;discussion&lt;/a&gt; present the issues around giving help to these regions, notably logistics. In the scientifique publication community, this &lt;a href="http://journals.plos.org/plosntds/article?id=10.1371/journal.pntd.0003895"&gt;recent paper&lt;/a&gt; on &lt;em&gt;Eliminating the Neglected Tropical Diseases: Translational Science and New Technologies&lt;/em&gt; is particularly interesting.&lt;/p&gt;
 &lt;p&gt;NTD are mainly (but not only) located in tropical countries. I wanted to see which countries were the most affected by these diseases and which diseases were the most widespread. I also used the case of one disease, Lymphatic Filariasis, to find cluster of diseases.&lt;/p&gt;
 &lt;h1&gt;1. Data&lt;/h1&gt;
 &lt;h2&gt;Disease data&lt;/h2&gt;
 &lt;p&gt;The &lt;a href="http://apps.who.int/gho/data/node.main.A1629?lang=en"&gt;World Health Organisation&lt;/a&gt; lists 17 NTDs in 149 countries. However, not all diseases have global datasets. These datasets contain data of: new cases reported (&lt;em&gt;incidence&lt;/em&gt;), cases (&lt;em&gt;prevalence&lt;/em&gt;), individuals treated, and deaths in the case of rabies. Some of the NTDs data were more complicated to acquire, so they are not included in this analysis.&lt;/p&gt;
 &lt;h3&gt;Background on theses diseases&lt;/h3&gt;
 &lt;p&gt;Neglected Tropical Diseases (NTDs) are transmitted by flies, rabids, worms, or other people. In the buruli ulcer's case, the cause is even unknown. The consequences range from temporary disabilities (Dracunculiasis) to deaths (rabies). Most are easily cured (e.g. leprosy, rabies), but for some prevention is still difficult (Buruli ulcer).&lt;/p&gt;
-&lt;table class="table-striped table-sm table-hover table" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;"&gt;
+&lt;table class="table-hover table-striped table table-sm" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;"&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;&lt;/th&gt;&lt;th&gt;NTD&lt;/th&gt;&lt;th&gt;Disease&lt;/th&gt;&lt;td&gt;Vehicle&lt;/td&gt;&lt;td&gt;Consequence&lt;/td&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;1&lt;/th&gt;&lt;td&gt;Rabies&lt;/td&gt;&lt;td&gt;Viral&lt;/td&gt;&lt;td&gt;Rabids&lt;/td&gt;&lt;td&gt;Death&lt;/td&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;2&lt;/th&gt;&lt;td&gt;Human African Trypanosomiasis (Tb Rhodesiense)&lt;/td&gt;&lt;td&gt;Parasitic&lt;/td&gt;&lt;td&gt;Tsetse fly&lt;/td&gt;&lt;td&gt;Nervous system&lt;/td&gt;&lt;/tr&gt;
@@ -18,10 +148,10 @@
 &lt;tr&gt;&lt;th scope="row"&gt;8&lt;/th&gt;&lt;td&gt;Dracunculiasis (guinea-worm disease)&lt;/td&gt;&lt;td&gt;Infection&lt;/td&gt;&lt;td&gt;Worms in water&lt;/td&gt;&lt;td&gt;Temporary disability&lt;/td&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;9&lt;/th&gt;&lt;td&gt;Buruli ulcer&lt;/td&gt;&lt;td&gt;Infection&lt;/td&gt;&lt;td&gt;?&lt;/td&gt;&lt;td&gt;Skin ulcer&lt;/td&gt;&lt;/tr&gt;
 &lt;/table&gt;
-&lt;p&gt;Some countries have managed to eradicate some NTDs (e.g. Mexico eradicated onchocerciasis), but NTDs are still endemic in many countries. Cutaneous leishmaniasis, also called the Aleppo boil, seem to be coming back in 2016, principally in refugees fleeing Middle Eastern countries. &lt;/p&gt;
+&lt;p&gt;Some countries have managed to eradicate some NTDs (e.g. Mexico eradicated onchocerciasis), but NTDs are still endemic in many countries. Cutaneous leishmaniasis, also called the Aleppo boil, seem to be coming back in 2016, principally in refugees fleeing Middle Eastern countries.&lt;/p&gt;
 &lt;h3&gt;Available data&lt;/h3&gt;
 &lt;p&gt;I downloaded data for 8 NTDs:
-&lt;table class="table-striped table-sm table-hover table" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;"&gt;
+&lt;table class="table-hover table-striped table table-sm" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;"&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;&lt;/th&gt;&lt;th&gt;NTD&lt;/th&gt;&lt;th&gt;Data&lt;/th&gt;&lt;td&gt;Measure&lt;/td&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;1&lt;/th&gt;&lt;td&gt;Rabies&lt;/td&gt;&lt;td&gt;Reported number of human rabies deaths&lt;/td&gt;&lt;td&gt;Mortality&lt;/td&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;2&lt;/th&gt;&lt;td&gt;Human African Trypanosomiasis (Tb Rhodesiense)&lt;/td&gt;&lt;td&gt;Number of &lt;strong&gt;new&lt;/strong&gt; reported cases&lt;/td&gt;&lt;td&gt;Incidence&lt;/td&gt;&lt;/tr&gt;
@@ -46,7 +176,7 @@
 &lt;h1&gt;2. Data cleaning &amp;amp; preparation in R&lt;/h1&gt;
 &lt;h2&gt;Data cleaning&lt;/h2&gt;
 &lt;p&gt;The data I downloaded consisted of CSV files, one per disease. Each CSV file included only a selection of sovereign states with data for a selected few years (1990-2015). Missing data was inconsistent: some countries only had 'No data' while others had only '0'; however it was not clear if the "0" referred to missing data or to no data. For instance in Guinea-Bissau, cases of onchocerciasis (river blindness) were as following:&lt;/p&gt;
-&lt;table class="table-striped table-sm table-hover table" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;"&gt;
+&lt;table class="table-hover table-striped table table-sm" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;"&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;Country&lt;/th&gt;&lt;th&gt;2015&lt;/th&gt;&lt;th&gt;2014&lt;/th&gt;&lt;th&gt;2013&lt;/th&gt;&lt;th&gt;2012&lt;/th&gt;&lt;th&gt;2011&lt;/th&gt;&lt;th&gt;2010&lt;/th&gt;&lt;th&gt;2009&lt;/th&gt;&lt;th&gt;2008&lt;/th&gt;&lt;th&gt;2007&lt;/th&gt;&lt;th&gt;2006&lt;/th&gt;&lt;th&gt;2005&lt;/th&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;Guinea-Bissau&lt;/th&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;124517&lt;/td&gt;&lt;td&gt;107278&lt;/td&gt;&lt;td&gt;107835&lt;/td&gt;&lt;td&gt;135014&lt;/td&gt;&lt;td&gt;NA&lt;/td&gt;&lt;td&gt;NA&lt;/td&gt;&lt;td&gt;70616&lt;/td&gt;&lt;td&gt;NA&lt;/td&gt;&lt;td&gt;NA&lt;/td&gt;&lt;td&gt;NA&lt;/td&gt;&lt;/tr&gt;
 &lt;/table&gt;
@@ -73,7 +203,7 @@ world_name &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; world_sel &lt;span class
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h2&gt;Merge with CSV data&lt;/h2&gt;
 &lt;p&gt;I downloaded the number of cases of all the diseases available on the WHO website. Not all the countries had been spelt the same way, so I first joined the dataframe of the shapefile and the data from WHO to find out which countries did not match:&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;wj1 &amp;lt;- full_join(world_name@data,rabies,by="Country")&lt;/code&gt;. &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;wj1 &amp;lt;- full_join(world_name@data,rabies,by="Country")&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;I changed semi-manually the country names to match the Natural Earth dataset.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Load data for Neglected Tropical Disease and take the latest year only&lt;/span&gt;
 rabies &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; read.csv&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Data_neglected/human_rabies.csv"&lt;/span&gt;&lt;span class="p"&gt;)[,&lt;/span&gt;&lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
@@ -100,7 +230,7 @@ w8&lt;span class="o"&gt;$&lt;/span&gt;rabies_norm &lt;span class="o"&gt;&amp;lt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Guinea-Bissau, Philippines, Zimbabwe
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h2&gt;Visualise change with Tableau&lt;/h2&gt;
-&lt;p&gt;I used &lt;a href="tableau"&gt;Tableau&lt;/a&gt; to visualise change over time. The three graphs below correspond to the countries that have had the most change in the data available: Uganda, Mali, and Benin. &lt;/p&gt;
+&lt;p&gt;I used &lt;a href="tableau"&gt;Tableau&lt;/a&gt; to visualise change over time. The three graphs below correspond to the countries that have had the most change in the data available: Uganda, Mali, and Benin.&lt;/p&gt;
 &lt;p&gt;The embedded dashboard is interactive; it is possible to filter by Country, disease, and years to allow more exploration. The legend is also interactive, so click on any disease's name to highlight it.&lt;/p&gt;
 &lt;div class="tableauPlaceholder" id="viz1485785145275" style="position: relative"&gt;&lt;noscript&gt;&lt;a href="#"&gt;&lt;img alt="Dashboard 1 " class="img-fluid" src="https://public.tableau.com/static/images/NT/NTD_dashboard/Dashboard1/1_rss.png" style="border: none"/&gt;&lt;/a&gt;&lt;/noscript&gt;&lt;object class="tableauViz" style="display:none;"&gt;&lt;param name="host_url" value="https%3A%2F%2Fpublic.tableau.com%2F"&gt;&lt;/param&gt; &lt;param name="site_root" value=""&gt;&lt;/param&gt;&lt;param name="name" value="NTD_dashboard/Dashboard1"&gt;&lt;/param&gt;&lt;param name="tabs" value="no"&gt;&lt;/param&gt;&lt;param name="toolbar" value="yes"&gt;&lt;/param&gt;&lt;param name="static_image" value="https://public.tableau.com/static/images/NT/NTD_dashboard/Dashboard1/1.png"&gt;&lt;/param&gt; &lt;param name="animate_transition" value="yes"&gt;&lt;/param&gt;&lt;param name="display_static_image" value="yes"&gt;&lt;/param&gt;&lt;param name="display_spinner" value="yes"&gt;&lt;/param&gt;&lt;param name="display_overlay" value="yes"&gt;&lt;/param&gt;&lt;param name="display_count" value="yes"&gt;&lt;/param&gt;&lt;/object&gt;&lt;/div&gt;
 &lt;script type="text/javascript"&gt;
@@ -124,7 +254,7 @@ vizElement.parentNode.insertBefore(scriptElement, vizElement);
 w8&lt;span class="o"&gt;$&lt;/span&gt;rabies_yes&lt;span class="p"&gt;[&lt;/span&gt;w8&lt;span class="o"&gt;$&lt;/span&gt;rabies &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
 w8&lt;span class="o"&gt;$&lt;/span&gt;rabies_yes&lt;span class="p"&gt;[&lt;/span&gt;w8&lt;span class="o"&gt;$&lt;/span&gt;rabies &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="kp"&gt;is.na&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;w8&lt;span class="o"&gt;$&lt;/span&gt;rabies&lt;span class="p"&gt;)]&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;
 
-w8&lt;span class="o"&gt;$&lt;/span&gt;nb_diseases &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; w8&lt;span class="o"&gt;$&lt;/span&gt;rabies_yes &lt;span class="o"&gt;+&lt;/span&gt; w8&lt;span class="o"&gt;$&lt;/span&gt;leprosy_yes &lt;span class="o"&gt;+&lt;/span&gt; w8&lt;span class="o"&gt;$&lt;/span&gt;onchocerciasis_yes &lt;span class="o"&gt;+&lt;/span&gt; 
+w8&lt;span class="o"&gt;$&lt;/span&gt;nb_diseases &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; w8&lt;span class="o"&gt;$&lt;/span&gt;rabies_yes &lt;span class="o"&gt;+&lt;/span&gt; w8&lt;span class="o"&gt;$&lt;/span&gt;leprosy_yes &lt;span class="o"&gt;+&lt;/span&gt; w8&lt;span class="o"&gt;$&lt;/span&gt;onchocerciasis_yes &lt;span class="o"&gt;+&lt;/span&gt;
             w8&lt;span class="o"&gt;$&lt;/span&gt;vleishmaniasis_yes &lt;span class="o"&gt;+&lt;/span&gt; w8&lt;span class="o"&gt;$&lt;/span&gt;cleishmaniasis_yes &lt;span class="o"&gt;+&lt;/span&gt; w8&lt;span class="o"&gt;$&lt;/span&gt;tbrhodesiense_yes &lt;span class="o"&gt;+&lt;/span&gt;
             w8&lt;span class="o"&gt;$&lt;/span&gt;dracunculiasis_yes &lt;span class="o"&gt;+&lt;/span&gt; w8&lt;span class="o"&gt;$&lt;/span&gt;buruli_ulcer_yes
 &lt;span class="c1"&gt;# when needed remove the columns "_yes"&lt;/span&gt;
@@ -138,7 +268,7 @@ world_data &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; w8&lt;span class="p"&gt;
 &lt;h2&gt;Possible clusters of diseases&lt;/h2&gt;
 &lt;p&gt;Transmittion of the NTDs varies (see Table 1), but there are constant - for one thing, NTDs are mostly in tropical to subtropical areas. I wanted to find out if there were clusters between the NTDs: are some diseases always occuring together?&lt;/p&gt;
 &lt;h3&gt;arules&lt;/h3&gt;
-&lt;p&gt;I used a data mining technique called 'frequent itemset mining' and used the &lt;code&gt;arules&lt;/code&gt; package for R. The package was created to mine 'items' bought together during a 'transaction'. Here the transactions are the countries and the items are the NTDs. &lt;/p&gt;
+&lt;p&gt;I used a data mining technique called 'frequent itemset mining' and used the &lt;code&gt;arules&lt;/code&gt; package for R. The package was created to mine 'items' bought together during a 'transaction'. Here the transactions are the countries and the items are the NTDs.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Select only the columns of interest&lt;/span&gt;
 ntd_group &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; w8&lt;span class="o"&gt;@&lt;/span&gt;data&lt;span class="p"&gt;[,&lt;/span&gt;&lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'Country'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;'rabies_yes'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;'leprosy_yes'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;'onchocerciasis_yes'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                     &lt;span class="s"&gt;'vleishmaniasis_yes'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;'cleishmaniasis_yes'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;'tbrhodesiense_yes'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
@@ -152,8 +282,8 @@ ntd_group_trans &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; ntd_group&lt;span c
 &lt;span class="c1"&gt;# Create transaction&lt;/span&gt;
 ntd_transactions &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; as&lt;span class="p"&gt;(&lt;/span&gt;ntd_group_trans&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"transactions"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;I first ran an 'apriori' rule &lt;/p&gt;
-&lt;p&gt;&lt;code&gt;is &amp;lt;- apriori(trans, parameter=list(target="frequent", support=0.005))&lt;/code&gt; &lt;/p&gt;
+&lt;p&gt;I first ran an 'apriori' rule&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;is &amp;lt;- apriori(trans, parameter=list(target="frequent", support=0.005))&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;to find the frequent NTDs. I obtained the following result:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;items                                   support  
 [1]  {leprosy}                               0.8211382
@@ -168,8 +298,8 @@ ntd_transactions &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; as&lt;span class="
 [10] {leprosy,vleishmaniasis,cleishmaniasis} 0.1219512
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The first three are single NTDs. Leprosy is the disease the most widespread, so it is not surprising to find it as the most frequent here. If we go down to the 4th item, we find 'Leprosy' and 'cleishmaniasis' (Cutaneous Leishmaniasis), then 'cleishmaniasis' and 'vleishmaniasis' (Visceral Leishmaniasis), and then 'Leprosy' and 'vleishmaniasis'. These are the three most spread diseases across countries, with relative similar co-occurence. Nothing very surprising here, since Leprosy is the most widespread, and Cutaneous Leishmaniasis and Visceral Leishmaniasis come from the same type of infection. If anything, this can tell us at least, that they are indeed co-occurent!&lt;/p&gt;
-&lt;p&gt;Finally I ran another 'apriori' rule to find which presence of NTD would imply another one: &lt;/p&gt;
-&lt;p&gt;&lt;code&gt;rules &amp;lt;- apriori(trans, parameter=list(support=0.05, confidence=.9))&lt;/code&gt;. &lt;/p&gt;
+&lt;p&gt;Finally I ran another 'apriori' rule to find which presence of NTD would imply another one:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;rules &amp;lt;- apriori(trans, parameter=list(support=0.05, confidence=.9))&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The top three association rules are:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;        lhs                              rhs       support    confidence lift    
 [1] {onchocerciasis,tbgambiense}  =&amp;gt; {leprosy} 0.05691057 1.0000000  1.217822
@@ -177,7 +307,7 @@ ntd_transactions &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; as&lt;span class="
 [3] {buruli_ulcer}                =&amp;gt; {leprosy} 0.09756098 0.9230769  1.124143
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;with &lt;em&gt;lhs&lt;/em&gt; for left-hand-side and &lt;em&gt;rhs&lt;/em&gt; for right-hand-side. The occurence of the first implying the occurence of the latter.&lt;/p&gt;
-&lt;p&gt;The confindence value of rule [1] and rule [2] being 1, this means that where there is onchocerciasis and Tb gambiense or onchocerciasis and Buruli ulcer, 100% of the times there is leprosy. The lift here indicates that they are independant, which means that these two left &lt;/p&gt;
+&lt;p&gt;The confindence value of rule [1] and rule [2] being 1, this means that where there is onchocerciasis and Tb gambiense or onchocerciasis and Buruli ulcer, 100% of the times there is leprosy. The lift here indicates that they are independant, which means that these two left&lt;/p&gt;
 &lt;p&gt;Therefore, in countries where there is Onchocerciasis and Tb gambiense, Onchocerciasis and Buruli ulcer, or Buruli ulcer, it is likely (confidence close to 1) that there is leprosy also. Since leprosy affects three times more countries than the other NTDs, it would be wise to remove it from further analysess.&lt;/p&gt;
 &lt;h3&gt;Conclusion&lt;/h3&gt;
 &lt;p&gt;The fact that leprosy is such a frequent disease compared to others skews the result, and makes it difficult to see real trend. Besides, many NTDs are missing from this analysis; those for which the data was not easily available. It would have been interesting to include Chagas and the dengue for instance, since they are also widespread.&lt;/p&gt;
@@ -193,10 +323,10 @@ world_data&lt;span class="o"&gt;@&lt;/span&gt;data&lt;span class="o"&gt;$&lt;/sp
                                     &lt;span class="m"&gt;100&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;world_data&lt;span class="o"&gt;@&lt;/span&gt;data&lt;span class="o"&gt;$&lt;/span&gt;infected&lt;span class="o"&gt;/&lt;/span&gt;world_data&lt;span class="o"&gt;@&lt;/span&gt;data&lt;span class="o"&gt;$&lt;/span&gt;pop_est&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="kc"&gt;NA&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Looking at the number of people infected per country, we can isolate 14 countries for which 10 to 50% of the population is affected by one NTD.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;highincidence &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;subset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;world_data&lt;span class="o"&gt;@&lt;/span&gt;data&lt;span class="p"&gt;,&lt;/span&gt;incidence &lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="kp"&gt;is.na&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;incidence&lt;span class="p"&gt;),&lt;/span&gt; 
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;highincidence &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;subset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;world_data&lt;span class="o"&gt;@&lt;/span&gt;data&lt;span class="p"&gt;,&lt;/span&gt;incidence &lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="kp"&gt;is.na&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;incidence&lt;span class="p"&gt;),&lt;/span&gt;
 select&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;Country&lt;span class="p"&gt;,&lt;/span&gt; pop_est&lt;span class="p"&gt;,&lt;/span&gt; incidence&lt;span class="p"&gt;,&lt;/span&gt;nb_diseases&lt;span class="p"&gt;))&lt;/span&gt;
 
-&lt;span class="c1"&gt;# Top countries where 10 to 50% of the population is affected by &lt;/span&gt;
+&lt;span class="c1"&gt;# Top countries where 10 to 50% of the population is affected by&lt;/span&gt;
 &lt;span class="c1"&gt;# an NTD.&lt;/span&gt;
 highincidence&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="kp"&gt;order&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;highincidence&lt;span class="o"&gt;$&lt;/span&gt;incidence&lt;span class="p"&gt;),]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -204,7 +334,7 @@ highincidence&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="kp"&gt;order&lt
 &lt;p&gt;Every country in this top 14 is in Africa! Although Asia and South America are also struggling with NTDs, it seems that most people infected are in Africa.&lt;/p&gt;
 &lt;h2&gt;Statistics for each disease&lt;/h2&gt;
 &lt;p&gt;I ran some simple statistics to find the total number of people affected, the mean, and the standard deviation. For that, I used the &lt;code&gt;ddply&lt;/code&gt; package in R.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ntd_stats_summ &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; ddply&lt;span class="p"&gt;(&lt;/span&gt;melted&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"variable"&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; 
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ntd_stats_summ &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; ddply&lt;span class="p"&gt;(&lt;/span&gt;melted&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"variable"&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
       summarise&lt;span class="p"&gt;,&lt;/span&gt; total &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kp"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;value&lt;span class="p"&gt;,&lt;/span&gt;na.rm&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;T&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
       mean &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kp"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;value&lt;span class="p"&gt;,&lt;/span&gt;na.rm&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;T&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; sd &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kp"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;sd&lt;span class="p"&gt;(&lt;/span&gt;value&lt;span class="p"&gt;,&lt;/span&gt;na.rm&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;T&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
       sd_per &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kp"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;100&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;sd&lt;span class="p"&gt;(&lt;/span&gt;value&lt;span class="p"&gt;,&lt;/span&gt;na.rm&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;T&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;value&lt;span class="p"&gt;,&lt;/span&gt;na.rm&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;T&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
@@ -213,7 +343,7 @@ ntd_stats_summ &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; ntd_stats_summ&lt;sp
 &lt;p&gt;This resulted in the following table:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="simplestats alt &amp;lt;&amp;gt;" class="img-fluid" src="https://helenedraux.github.io/images/analysis_ntd/simplestats.png"/&gt;&lt;/p&gt;
 &lt;h2&gt;Influence of some economic variables&lt;/h2&gt;
-&lt;p&gt;I used a few economic variables to find if there was a relation between presence of NTDs and GDP, economy, and income grp. These were variables easy to find in the Natural Earth dataset. I used a &lt;strong&gt;linear model&lt;/strong&gt; in a first instance, but there was no significant relationship between the total number of people affected by NTDs in these countries and their income. &lt;/p&gt;
+&lt;p&gt;I used a few economic variables to find if there was a relation between presence of NTDs and GDP, economy, and income grp. These were variables easy to find in the Natural Earth dataset. I used a &lt;strong&gt;linear model&lt;/strong&gt; in a first instance, but there was no significant relationship between the total number of people affected by NTDs in these countries and their income.&lt;/p&gt;
 &lt;h1&gt;4. Spatial analysis&lt;/h1&gt;
 &lt;p&gt;Spatial analysis would not be appropriate at the global scale in this case. For instance Cutaneous Leishmaniasis and Visceral Leishmaniasis both occur in Uganda, but in different regions. Trying to apply spatial statistics with global dataset would therefore not be very powerful and a regionalisation of the data is required.&lt;/p&gt;
 &lt;h2&gt;Lymphatic Filariasis&lt;/h2&gt;
@@ -221,7 +351,7 @@ ntd_stats_summ &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; ntd_stats_summ&lt;sp
 &lt;p&gt;I used the point data LF Avg Prevalence (%), which consists of 7,000 points.&lt;/p&gt;
 &lt;h2&gt;Density mapping&lt;/h2&gt;
 &lt;p&gt;Mapping a density of points can help finding 'hotspots' where cases of Lymphatic Filariasis are frequent. The package &lt;code&gt;spatstat&lt;/code&gt; provides with a simple &lt;code&gt;density&lt;/code&gt; function.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;spatialpoints &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; as&lt;span class="p"&gt;(&lt;/span&gt;SpatialPoints&lt;span class="p"&gt;(&lt;/span&gt;LF_2016&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s"&gt;"ppp"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; 
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;spatialpoints &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; as&lt;span class="p"&gt;(&lt;/span&gt;SpatialPoints&lt;span class="p"&gt;(&lt;/span&gt;LF_2016&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s"&gt;"ppp"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 LF_density &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; density&lt;span class="p"&gt;(&lt;/span&gt;spatialpoints&lt;span class="p"&gt;,&lt;/span&gt; adjust &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;0.3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Then, by transforming the density into contour lines and keeping the most inner clustered points, we obtain the following map:&lt;/p&gt;
@@ -232,7 +362,7 @@ LF_density &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; density&lt;span class="p
 &lt;h2&gt;Export to geographic data&lt;/h2&gt;
 &lt;h3&gt;Select the data with spdplyr&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Select only the Tropics&lt;/span&gt;
-tropics &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; geographicline &lt;span class="o"&gt;%&amp;gt;%&lt;/span&gt; 
+tropics &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; geographicline &lt;span class="o"&gt;%&amp;gt;%&lt;/span&gt;
   filter&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;grepl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'^Tropic'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; geographicline&lt;span class="o"&gt;@&lt;/span&gt;data&lt;span class="o"&gt;$&lt;/span&gt;name&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h3&gt;Convert to geojson with geojsonio&lt;/h3&gt;
@@ -278,7 +408,7 @@ geojson_write&lt;span class="p"&gt;(&lt;/span&gt;tropics_json&lt;span class="p"&
 &lt;h2&gt;Epidemiology reads&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://www.youtube.com/channel/UChp6nkkF9KpJqCaTMYFwnNA/search?query=epidemiology"&gt;Kaplan videos&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><category term="R"></category><category term="epidemiology"></category></entry><entry><title>NLP of a Facebook Page</title><link href="https://helenedraux.github.io/posts/NLP%20analysis.html" rel="alternate"></link><published>2017-01-19T20:05:00+02:00</published><updated>2017-01-19T20:05:00+02:00</updated><author><name>Hélène</name></author><id>tag:helenedraux.github.io,2017-01-19:/posts/NLP analysis.html</id><summary type="html">
+&lt;/ul&gt;</content><category term="R"></category><category term="epidemiology"></category><category term="carto"></category><category term="Tableau"></category></entry><entry><title>NLP of a Facebook Page</title><link href="https://helenedraux.github.io/posts/NLP%20analysis.html" rel="alternate"></link><published>2017-01-19T20:05:00+02:00</published><updated>2017-01-19T20:05:00+02:00</updated><author><name>Hélène</name></author><id>tag:helenedraux.github.io,2017-01-19:/posts/NLP analysis.html</id><summary type="html">
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;
 &lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
@@ -1319,10 +1449,10 @@ h6:hover .anchor-link {
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
-&lt;div id="4b4b94cf-8575-405d-866a-2ab868771c62"&gt;&lt;/div&gt;
+&lt;div id="6efe8697-ce64-4cf2-85b8-e17b94d03f61"&gt;&lt;/div&gt;
 &lt;div class="output_subarea output_javascript "&gt;
 &lt;script type="text/javascript"&gt;
-var element = $('#4b4b94cf-8575-405d-866a-2ab868771c62');
+var element = $('#6efe8697-ce64-4cf2-85b8-e17b94d03f61');
 
 (function(global) {
   function now() {

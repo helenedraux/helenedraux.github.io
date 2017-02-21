@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Data science w/ a geo bias - Visualisation</title><link href="https://helenedraux.github.io/" rel="alternate"></link><link href="https://helenedraux.github.io/feeds/visualisation.atom.xml" rel="self"></link><id>https://helenedraux.github.io/</id><updated>2017-02-13T15:23:00+02:00</updated><entry><title>Shiny map interface</title><link href="https://helenedraux.github.io/posts/shinymapinterface.html" rel="alternate"></link><published>2017-02-13T15:23:00+02:00</published><updated>2017-02-13T15:23:00+02:00</updated><author><name>Hélène</name></author><id>tag:helenedraux.github.io,2017-02-13:/posts/shinymapinterface.html</id><summary type="html"></summary><content type="html">&lt;p&gt;After discovering R last month, I had to try Shiny. Over the past years, I've done many user interfaces:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://trap5.dk/kort/"&gt;Landscape Digital Atlas of Denmark&lt;/a&gt;,&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.havfriluftsliv.dk/result/result-1year.html"&gt;1 year result of a mapping survey I had designed&lt;/a&gt;,&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.helenedraux.net/portfolio/d3-gallery/"&gt;an advent calendar with a d3-graph a day&lt;/a&gt;,&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;so it was tempting to try Shiny. Interaction without JavaScript? I love JavaScript, but I want to see how that can work!&lt;/p&gt;
+&lt;p&gt;Since I'm largely geo-biased, I was happy to make a map interface for the UN in order to map reports of what is happening in Syria. I used Leaflet for R, which I've used in the past as a JavaScript library, and created this very simple &lt;a href="https://helenedraux.shinyapps.io/mapinterface/"&gt;Shiny app&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="countries_percAffected alt &amp;lt;&amp;gt;" class="img-fluid" src="https://helenedraux.github.io/images/shinyapp.png"/&gt;&lt;/p&gt;
+&lt;p&gt;In this blog post I present the app I've built, the data I used, and the interface. I then explain how I speed up the map, and then I conclude with my impressions of Shiny.&lt;/p&gt;
+&lt;h2&gt;0. Overview&lt;/h2&gt;
+&lt;p&gt;The app has two main objectives:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Being an interface for the administrative borders of Syria for the team in charge of recording the reports&lt;/li&gt;
+&lt;li&gt;Mapping the Excel reports to explore them using filters for date and some themes.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I also tried to code the export in KML but unfortunately there seem to be a bug with the KML module of OGR package. I managed to export as a shapefile, or geojson, but these are not format that are easy to use without a proper GIS software (GoogleEarth may be borderline GIS software, it is only borderline in my opinion), so I moved into creating a better interface so the team would not need to use GoogleEarth.&lt;/p&gt;
+&lt;h2&gt;1. The data&lt;/h2&gt;
+&lt;p&gt;I used the data available at &lt;a href="https://data.humdata.org/dataset/syrian-arab-republic-administrative-boundaries-populated-places"&gt;Humanitarian Data Exchange&lt;/a&gt; to show the 3 levels of administrative borders (Governorate, District and Subdistrict), and the communities.&lt;/p&gt;
+&lt;h3&gt;Administrative level&lt;/h3&gt;
+&lt;p&gt;The data is relatively heavy, so I transformed it in &lt;a href="https://github.com/topojson/topojson"&gt;topojson&lt;/a&gt;, and combined the three layers into one. Topojson is such a life saver when making webmap with accurate data!&lt;/p&gt;
+&lt;p&gt;I first renamed the fields from NAME_EN (they all had the same name) to the name of the layer (governorate, .. ), removed all the other fields, and then used the &lt;a href="https://github.com/mbloch/mapshaper"&gt;mapshaper&lt;/a&gt; tool, to combined them all together with the following command line:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;mapshaper -i syria_adm1.shp syria_adm2.shp syria_adm3.shp combine-files -o syria.topojson
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Communities&lt;/h3&gt;
+&lt;p&gt;The data provided by HDX contains the cities as polygons or points (the geographic center of the city). I thought of including the cities as polygons, but to make the application lighter, it is better to have them as points.&lt;/p&gt;
+&lt;h2&gt;2. The interface&lt;/h2&gt;
+&lt;p&gt;In making map dashboards, I always ensure that the users can find their way through the map. This means providing multiple basemaps and layers, data query tools, but also adding enough tools to navigate the map, for instance using a "Back Home" button. I also like making sure there are feedback with dynamic text or highlights, but it's a little bit more clunky in pure R.&lt;/p&gt;
+&lt;h3&gt;Layers&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Basemaps&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I selected two basemaps: the OSM (OpenStreetMap) and the HOT (Humanitarian OpenStreetMap Team): they don't have too much details, with faded colors, so it's possible to add more layers on them; and they have enough information to give a good context to the data.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Overlay maps&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Overlay maps are the layers specific to Syria: two topojson files for administrative areas and a csv point file.&lt;/p&gt;
+&lt;h3&gt;Mapping tools&lt;/h3&gt;
+&lt;p&gt;The mapping tools include zooms "in" and "out". Leaflet for R doesn't yet provide out of the box option to move the zooms in either corner of the map, so I kept them in the top left corner. I added an actionButton:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;actionButton&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"gobackhome"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;""&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; icon &lt;span class="o"&gt;=&lt;/span&gt; icon&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"globe"&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;with the CSS:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nn"&gt;#gobackhome&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nb"&gt;position&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;absolute&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="nb"&gt;z-index&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;10&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="nb"&gt;top&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;70px&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="nb"&gt;left&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;10px&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="n"&gt;box&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;shadow&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;rgba&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;65098&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="m"&gt;0px&lt;/span&gt; &lt;span class="m"&gt;1px&lt;/span&gt; &lt;span class="m"&gt;5px&lt;/span&gt; &lt;span class="m"&gt;0px&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="nb"&gt;padding&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;4px&lt;/span&gt; &lt;span class="m"&gt;6px&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;so it would be just under the zooms.&lt;/p&gt;
+&lt;h3&gt;Interactivity&lt;/h3&gt;
+&lt;p&gt;I added two ways to query the data:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Click on the map to get the location&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I couldn't find any documentation on the event name for the map click on a topojson file (the click on marker or shapes are documented, but not for topojson). I tried my luck with &lt;code&gt;map_topojson_click&lt;/code&gt; and was pleasantly surprised it worked! So I made an observeEvent:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;observeEvent&lt;span class="p"&gt;(&lt;/span&gt;input&lt;span class="o"&gt;$&lt;/span&gt;map_topojson_click&lt;span class="p"&gt;,{&lt;/span&gt;
+    output&lt;span class="o"&gt;$&lt;/span&gt;location_topojson &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; renderUI&lt;span class="p"&gt;({&lt;/span&gt;
+      gov &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;paste&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"&amp;lt;b&amp;gt;Governate&amp;lt;/b&amp;gt;: "&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; input&lt;span class="o"&gt;$&lt;/span&gt;map_topojson_click&lt;span class="o"&gt;$&lt;/span&gt;properties&lt;span class="o"&gt;$&lt;/span&gt;Governorat&lt;span class="p"&gt;)&lt;/span&gt;
+      district &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;paste&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"&amp;lt;b&amp;gt;-&amp;gt; District&amp;lt;/b&amp;gt;: "&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;input&lt;span class="o"&gt;$&lt;/span&gt;map_topojson_click&lt;span class="o"&gt;$&lt;/span&gt;properties&lt;span class="o"&gt;$&lt;/span&gt;District&lt;span class="p"&gt;)&lt;/span&gt;
+      subdistrict &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;paste&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"&amp;lt;b&amp;gt;--&amp;gt; Sub district&amp;lt;/b&amp;gt;: "&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;input&lt;span class="o"&gt;$&lt;/span&gt;map_topojson_click&lt;span class="o"&gt;$&lt;/span&gt;properties&lt;span class="o"&gt;$&lt;/span&gt;Subdistric&lt;span class="p"&gt;)&lt;/span&gt;
+      HTML&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;paste&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;gov&lt;span class="p"&gt;,&lt;/span&gt; district&lt;span class="p"&gt;,&lt;/span&gt; subdistrict&lt;span class="p"&gt;,&lt;/span&gt; sep &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;'&amp;lt;br/&amp;gt;'&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+    &lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;For the city, the popup was very easily to encode with &lt;code&gt;popup=cities$Community&lt;/code&gt; when creating them.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Select the location&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Largely inspired by this &lt;a href="https://blog.snap.uaf.edu/2016/03/16/r-shiny-leaflet-using-observers/"&gt;blog post&lt;/a&gt;, I added some interactivity to the map with an observer to the map click. The principle is to create an empty layer of points (&lt;code&gt;pt_selected&lt;/code&gt;) with a style that stands out (e.g. color and size), and to dynamically add and remove the point that should be highlighted or not.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pt_selected &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;map&lt;span class="p"&gt;,&lt;/span&gt; x&lt;span class="p"&gt;,&lt;/span&gt; y&lt;span class="p"&gt;)&lt;/span&gt; addCircleMarkers&lt;span class="p"&gt;(&lt;/span&gt;map&lt;span class="p"&gt;,&lt;/span&gt; x&lt;span class="p"&gt;,&lt;/span&gt; y&lt;span class="p"&gt;,&lt;/span&gt; radius&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; color&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"black"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; fillColor&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"orange"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; fillOpacity&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; opacity&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;  weight&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; stroke&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;TRUE&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; layerId&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"Selected"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+observeEvent&lt;span class="p"&gt;(&lt;/span&gt;input&lt;span class="o"&gt;$&lt;/span&gt;Map_marker_click&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    p &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; input&lt;span class="o"&gt;$&lt;/span&gt;Map_marker_click
+    proxy &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; leafletProxy&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"map"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="kr"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;p&lt;span class="o"&gt;$&lt;/span&gt;id&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="s"&gt;"Selected"&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+      proxy &lt;span class="o"&gt;%&amp;gt;%&lt;/span&gt; removeMarker&lt;span class="p"&gt;(&lt;/span&gt;layerId&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"Selected"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="kr"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      proxy &lt;span class="o"&gt;%&amp;gt;%&lt;/span&gt; setView&lt;span class="p"&gt;(&lt;/span&gt;lng&lt;span class="o"&gt;=&lt;/span&gt;p&lt;span class="o"&gt;$&lt;/span&gt;X&lt;span class="p"&gt;,&lt;/span&gt; lat&lt;span class="o"&gt;=&lt;/span&gt;p&lt;span class="o"&gt;$&lt;/span&gt;Y&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;12&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%&amp;gt;%&lt;/span&gt; pt_selected&lt;span class="p"&gt;(&lt;/span&gt;p&lt;span class="o"&gt;$&lt;/span&gt;X&lt;span class="p"&gt;,&lt;/span&gt; p&lt;span class="o"&gt;$&lt;/span&gt;Y&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;#replaced input$Map_zoom by 3&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The points are highlighted by two successive drop-down boxes: the first one selects a governorate, and the second a city within that governorate. I also added a layer of points representing the center of the polygons, and zoom on these when the governorate is selected. I think it would be better to use the bounding box, but I just selected a zoom and the center instead.&lt;/p&gt;
+&lt;h3&gt;Side panel&lt;/h3&gt;
+&lt;p&gt;I made a side panel to display all the tools specific to the interface: exploring locations, uploading files, and exploring the file. Each tool is on a tab; Shiny makes the creation of such tabs very easy.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Exploring locations&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The map can be explored in two ways:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Click on the map&lt;/strong&gt; gives a &lt;strong&gt;location&lt;/strong&gt;: governorate, district and subdistrict. That's where using a topojson file with combined files comes in really handy: since it's the same object, we only need to query one layer for three different attributes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Location&lt;/strong&gt; selected in the successive dropdowns &lt;strong&gt;zooms to their location on the map&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Select a location&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;On the 'Explore' tab of the panel, there are two drop downs: the first one for the governorates, and the second one for the cities. When a governorate is selected, the cities in the second drop down are the subset of cities in that governorate.&lt;/p&gt;
+&lt;h2&gt;Speeding up the map&lt;/h2&gt;
+&lt;p&gt;To make an interface that is well defined (good geographic data) but also easy to navigate, I used the following specifications:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Use point data as often as possible (for small cities)&lt;/li&gt;
+&lt;li&gt;Use topojson&lt;/li&gt;
+&lt;li&gt;Simplify geographic data&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;load the data after the basemaps are loaded:&lt;/p&gt;
+&lt;p&gt;:::R
+session$onFlushed(once=TRUE, function() {
+leafletProxy("map") %&amp;gt;%
+  addTopoJSON(neighbourhoods, weight = 1, color = "red",fillOpacity = 0.2,group ="Neighbourhoods" ) %&amp;gt;%
+  addTopoJSON(syria, weight = 1, dashArray="15, 10, 5", color = "#444444",fillOpacity = 0.01,group ="Admin. borders" ) %&amp;gt;%
+  addCircleMarkers(cities$X,cities$Y,color="navy",popup =cities$Community,radius = 3,stroke = FALSE,fillOpacity = 0.5,group="Communities")
+})&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Using Shiny&lt;/h2&gt;
+&lt;h3&gt;Shiny language&lt;/h3&gt;
+&lt;p&gt;Shiny was developed to enable quick development of webpages without knowledge of HTML/CSS/JavaScript. This is true for very simple apps: it is pretty fast to create simple interactions between the data and the visualisation. However, beyond very simple interactions, either it becomes more complex and programmers need to understand basic concepts of interactive coding (some questions on stackoverflow are very very basic and show that many programmers jump into shiny without understanding simple concepts of interactions), or it simply requires to add some JavaScript. That defeats a little bit the point of coding a shiny app - why not writing in JavaScript from the start? ]Unless R code is intensively used, it might be better to learn to use JavaScript. Especially when you know JavaScript already, learning the observer/reaction events can feel a bit like a waste of time.
+Shiny is also evolving pretty quickly: for instance there used to be only an &lt;code&gt;observe&lt;/code&gt; function, and so "observe" only one event, the code had to include &lt;code&gt;if (is.null(value)) return(NULL)&lt;/code&gt;, but now Shiny includes &lt;code&gt;observeEvent&lt;/code&gt; for specific events.&lt;/p&gt;
+&lt;p&gt;From my experience in Copenhagen University, where the statistics department develops apps for non R users, and videos watched on Youtube, it sounds like a large part of developers are actually spending a lot of time on developing apps. So they are akin to professional coders.. why not learning JavaScript? That's not really a serious question, but I wonder if creating a meta-language was really necessary. I guess that's what most people do anyway! JavaScript on top of Shiny. It's not very performant, but for performance I don't know of anything that beats D3.&lt;/p&gt;
+&lt;h3&gt;shinyapp.io&lt;/h3&gt;
+&lt;p&gt;The webplatform &lt;a href="shinyapp.io"&gt;shinyapp.io&lt;/a&gt; is meant to easily publish shiny based apps online. The free version gives 5 apps available 25 hours per month. That's a good offer (since it's free!), although I find the time restriction very limiting for (semi)-professional apps. On the performance side, the applications are very very slow and I wonder if it wouldn't be easier to use a dedicated service for that, even paying.&lt;/p&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Shiny is an easy-to-use language in order to quickly provide some interface for anyone to use R-based analysis. This means that non-R users can have access to interfaces without learning R, and makes it easier for R coders to discuss with non-technical people. Anything more complex requires some knowledge of JavaScript, but being able to use R functions on the fly in a browser is really interesting!&lt;/p&gt;
+&lt;p&gt;Have a look at my app &lt;a href="https://helenedraux.shinyapps.io/mapinterface/"&gt;here&lt;/a&gt;, and tell me what you think!&lt;/p&gt;</content><category term="R"></category><category term="Shiny"></category><category term="platform"></category><category term="Visualisation"></category></entry></feed>

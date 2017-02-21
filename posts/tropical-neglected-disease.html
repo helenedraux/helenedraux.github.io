@@ -100,7 +100,7 @@
       </li>
       <li class="list-inline-item">
         <i class="fa fa-files-o"></i>
-        <a href="https://helenedraux.github.io/tag/r.html">#R</a>,         <a href="https://helenedraux.github.io/tag/epidemiology.html">#epidemiology</a>      </li>
+        <a href="https://helenedraux.github.io/tag/r.html">#R</a>,         <a href="https://helenedraux.github.io/tag/epidemiology.html">#epidemiology</a>,         <a href="https://helenedraux.github.io/tag/carto.html">#carto</a>,         <a href="https://helenedraux.github.io/tag/tableau.html">#Tableau</a>      </li>
     </ul>
   </header>
   <hr>
@@ -118,7 +118,7 @@
 <p>The <a href="http://apps.who.int/gho/data/node.main.A1629?lang=en">World Health Organisation</a> lists 17 NTDs in 149 countries. However, not all diseases have global datasets. These datasets contain data of: new cases reported (<em>incidence</em>), cases (<em>prevalence</em>), individuals treated, and deaths in the case of rabies. Some of the NTDs data were more complicated to acquire, so they are not included in this analysis.</p>
 <h3>Background on theses diseases</h3>
 <p>Neglected Tropical Diseases (NTDs) are transmitted by flies, rabids, worms, or other people. In the buruli ulcer's case, the cause is even unknown. The consequences range from temporary disabilities (Dracunculiasis) to deaths (rabies). Most are easily cured (e.g. leprosy, rabies), but for some prevention is still difficult (Buruli ulcer).</p>
-<table class="table-striped table-sm table-hover table" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;">
+<table class="table-hover table-striped table table-sm" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;">
 <tr><th scope="row"></th><th>NTD</th><th>Disease</th><td>Vehicle</td><td>Consequence</td></tr>
 <tr><th scope="row">1</th><td>Rabies</td><td>Viral</td><td>Rabids</td><td>Death</td></tr>
 <tr><th scope="row">2</th><td>Human African Trypanosomiasis (Tb Rhodesiense)</td><td>Parasitic</td><td>Tsetse fly</td><td>Nervous system</td></tr>
@@ -130,10 +130,10 @@
 <tr><th scope="row">8</th><td>Dracunculiasis (guinea-worm disease)</td><td>Infection</td><td>Worms in water</td><td>Temporary disability</td></tr>
 <tr><th scope="row">9</th><td>Buruli ulcer</td><td>Infection</td><td>?</td><td>Skin ulcer</td></tr>
 </table>
-<p>Some countries have managed to eradicate some NTDs (e.g. Mexico eradicated onchocerciasis), but NTDs are still endemic in many countries. Cutaneous leishmaniasis, also called the Aleppo boil, seem to be coming back in 2016, principally in refugees fleeing Middle Eastern countries. </p>
+<p>Some countries have managed to eradicate some NTDs (e.g. Mexico eradicated onchocerciasis), but NTDs are still endemic in many countries. Cutaneous leishmaniasis, also called the Aleppo boil, seem to be coming back in 2016, principally in refugees fleeing Middle Eastern countries.</p>
 <h3>Available data</h3>
 <p>I downloaded data for 8 NTDs:
-<table class="table-striped table-sm table-hover table" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;">
+<table class="table-hover table-striped table table-sm" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;">
 <tr><th scope="row"></th><th>NTD</th><th>Data</th><td>Measure</td></tr>
 <tr><th scope="row">1</th><td>Rabies</td><td>Reported number of human rabies deaths</td><td>Mortality</td></tr>
 <tr><th scope="row">2</th><td>Human African Trypanosomiasis (Tb Rhodesiense)</td><td>Number of <strong>new</strong> reported cases</td><td>Incidence</td></tr>
@@ -158,7 +158,7 @@
 <h1>2. Data cleaning &amp; preparation in R</h1>
 <h2>Data cleaning</h2>
 <p>The data I downloaded consisted of CSV files, one per disease. Each CSV file included only a selection of sovereign states with data for a selected few years (1990-2015). Missing data was inconsistent: some countries only had 'No data' while others had only '0'; however it was not clear if the "0" referred to missing data or to no data. For instance in Guinea-Bissau, cases of onchocerciasis (river blindness) were as following:</p>
-<table class="table-striped table-sm table-hover table" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;">
+<table class="table-hover table-striped table table-sm" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;">
 <tr><th scope="row">Country</th><th>2015</th><th>2014</th><th>2013</th><th>2012</th><th>2011</th><th>2010</th><th>2009</th><th>2008</th><th>2007</th><th>2006</th><th>2005</th></tr>
 <tr><th scope="row">Guinea-Bissau</th><td>0</td><td>124517</td><td>107278</td><td>107835</td><td>135014</td><td>NA</td><td>NA</td><td>70616</td><td>NA</td><td>NA</td><td>NA</td></tr>
 </table>
@@ -185,7 +185,7 @@ world_name <span class="o">&lt;-</span> world_sel <span class="o">%&gt;%</span> 
 </pre></div>
 <h2>Merge with CSV data</h2>
 <p>I downloaded the number of cases of all the diseases available on the WHO website. Not all the countries had been spelt the same way, so I first joined the dataframe of the shapefile and the data from WHO to find out which countries did not match:</p>
-<p><code>wj1 &lt;- full_join(world_name@data,rabies,by="Country")</code>. </p>
+<p><code>wj1 &lt;- full_join(world_name@data,rabies,by="Country")</code>.</p>
 <p>I changed semi-manually the country names to match the Natural Earth dataset.</p>
 <div class="highlight"><pre><span></span><span class="c1"># Load data for Neglected Tropical Disease and take the latest year only</span>
 rabies <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">"Data_neglected/human_rabies.csv"</span><span class="p">)[,</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)]</span>
@@ -212,7 +212,7 @@ w8<span class="o">$</span>rabies_norm <span class="o">&lt;-</span> <span class="
 <div class="highlight"><pre><span></span>Guinea-Bissau, Philippines, Zimbabwe
 </pre></div>
 <h2>Visualise change with Tableau</h2>
-<p>I used <a href="tableau">Tableau</a> to visualise change over time. The three graphs below correspond to the countries that have had the most change in the data available: Uganda, Mali, and Benin. </p>
+<p>I used <a href="tableau">Tableau</a> to visualise change over time. The three graphs below correspond to the countries that have had the most change in the data available: Uganda, Mali, and Benin.</p>
 <p>The embedded dashboard is interactive; it is possible to filter by Country, disease, and years to allow more exploration. The legend is also interactive, so click on any disease's name to highlight it.</p>
 <div class="tableauPlaceholder" id="viz1485785145275" style="position: relative"><noscript><a href="#"><img alt="Dashboard 1 " class="img-fluid" src="https://public.tableau.com/static/images/NT/NTD_dashboard/Dashboard1/1_rss.png" style="border: none"/></a></noscript><object class="tableauViz" style="display:none;"><param name="host_url" value="https%3A%2F%2Fpublic.tableau.com%2F"></param> <param name="site_root" value=""></param><param name="name" value="NTD_dashboard/Dashboard1"></param><param name="tabs" value="no"></param><param name="toolbar" value="yes"></param><param name="static_image" value="https://public.tableau.com/static/images/NT/NTD_dashboard/Dashboard1/1.png"></param> <param name="animate_transition" value="yes"></param><param name="display_static_image" value="yes"></param><param name="display_spinner" value="yes"></param><param name="display_overlay" value="yes"></param><param name="display_count" value="yes"></param></object></div>
 <script type="text/javascript">
@@ -236,7 +236,7 @@ vizElement.parentNode.insertBefore(scriptElement, vizElement);
 w8<span class="o">$</span>rabies_yes<span class="p">[</span>w8<span class="o">$</span>rabies <span class="o">!=</span> <span class="m">0</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="m">1</span>
 w8<span class="o">$</span>rabies_yes<span class="p">[</span>w8<span class="o">$</span>rabies <span class="o">==</span> <span class="m">0</span> <span class="o">|</span> <span class="kp">is.na</span><span class="p">(</span>w8<span class="o">$</span>rabies<span class="p">)]</span> <span class="o">&lt;-</span> <span class="m">0</span>
 
-w8<span class="o">$</span>nb_diseases <span class="o">&lt;-</span> w8<span class="o">$</span>rabies_yes <span class="o">+</span> w8<span class="o">$</span>leprosy_yes <span class="o">+</span> w8<span class="o">$</span>onchocerciasis_yes <span class="o">+</span> 
+w8<span class="o">$</span>nb_diseases <span class="o">&lt;-</span> w8<span class="o">$</span>rabies_yes <span class="o">+</span> w8<span class="o">$</span>leprosy_yes <span class="o">+</span> w8<span class="o">$</span>onchocerciasis_yes <span class="o">+</span>
             w8<span class="o">$</span>vleishmaniasis_yes <span class="o">+</span> w8<span class="o">$</span>cleishmaniasis_yes <span class="o">+</span> w8<span class="o">$</span>tbrhodesiense_yes <span class="o">+</span>
             w8<span class="o">$</span>dracunculiasis_yes <span class="o">+</span> w8<span class="o">$</span>buruli_ulcer_yes
 <span class="c1"># when needed remove the columns "_yes"</span>
@@ -250,7 +250,7 @@ world_data <span class="o">&lt;-</span> w8<span class="p">[,</span> <span class=
 <h2>Possible clusters of diseases</h2>
 <p>Transmittion of the NTDs varies (see Table 1), but there are constant - for one thing, NTDs are mostly in tropical to subtropical areas. I wanted to find out if there were clusters between the NTDs: are some diseases always occuring together?</p>
 <h3>arules</h3>
-<p>I used a data mining technique called 'frequent itemset mining' and used the <code>arules</code> package for R. The package was created to mine 'items' bought together during a 'transaction'. Here the transactions are the countries and the items are the NTDs. </p>
+<p>I used a data mining technique called 'frequent itemset mining' and used the <code>arules</code> package for R. The package was created to mine 'items' bought together during a 'transaction'. Here the transactions are the countries and the items are the NTDs.</p>
 <div class="highlight"><pre><span></span><span class="c1"># Select only the columns of interest</span>
 ntd_group <span class="o">&lt;-</span> w8<span class="o">@</span>data<span class="p">[,</span><span class="kt">c</span><span class="p">(</span><span class="s">'Country'</span><span class="p">,</span><span class="s">'rabies_yes'</span><span class="p">,</span><span class="s">'leprosy_yes'</span><span class="p">,</span><span class="s">'onchocerciasis_yes'</span><span class="p">,</span>
                     <span class="s">'vleishmaniasis_yes'</span><span class="p">,</span><span class="s">'cleishmaniasis_yes'</span><span class="p">,</span><span class="s">'tbrhodesiense_yes'</span><span class="p">,</span>
@@ -264,8 +264,8 @@ ntd_group_trans <span class="o">&lt;-</span> ntd_group<span class="p">[,</span> 
 <span class="c1"># Create transaction</span>
 ntd_transactions <span class="o">&lt;-</span> as<span class="p">(</span>ntd_group_trans<span class="p">,</span> <span class="s">"transactions"</span><span class="p">)</span>
 </pre></div>
-<p>I first ran an 'apriori' rule </p>
-<p><code>is &lt;- apriori(trans, parameter=list(target="frequent", support=0.005))</code> </p>
+<p>I first ran an 'apriori' rule</p>
+<p><code>is &lt;- apriori(trans, parameter=list(target="frequent", support=0.005))</code></p>
 <p>to find the frequent NTDs. I obtained the following result:</p>
 <div class="highlight"><pre><span></span>items                                   support  
 [1]  {leprosy}                               0.8211382
@@ -280,8 +280,8 @@ ntd_transactions <span class="o">&lt;-</span> as<span class="p">(</span>ntd_grou
 [10] {leprosy,vleishmaniasis,cleishmaniasis} 0.1219512
 </pre></div>
 <p>The first three are single NTDs. Leprosy is the disease the most widespread, so it is not surprising to find it as the most frequent here. If we go down to the 4th item, we find 'Leprosy' and 'cleishmaniasis' (Cutaneous Leishmaniasis), then 'cleishmaniasis' and 'vleishmaniasis' (Visceral Leishmaniasis), and then 'Leprosy' and 'vleishmaniasis'. These are the three most spread diseases across countries, with relative similar co-occurence. Nothing very surprising here, since Leprosy is the most widespread, and Cutaneous Leishmaniasis and Visceral Leishmaniasis come from the same type of infection. If anything, this can tell us at least, that they are indeed co-occurent!</p>
-<p>Finally I ran another 'apriori' rule to find which presence of NTD would imply another one: </p>
-<p><code>rules &lt;- apriori(trans, parameter=list(support=0.05, confidence=.9))</code>. </p>
+<p>Finally I ran another 'apriori' rule to find which presence of NTD would imply another one:</p>
+<p><code>rules &lt;- apriori(trans, parameter=list(support=0.05, confidence=.9))</code>.</p>
 <p>The top three association rules are:</p>
 <div class="highlight"><pre><span></span>        lhs                              rhs       support    confidence lift    
 [1] {onchocerciasis,tbgambiense}  =&gt; {leprosy} 0.05691057 1.0000000  1.217822
@@ -289,7 +289,7 @@ ntd_transactions <span class="o">&lt;-</span> as<span class="p">(</span>ntd_grou
 [3] {buruli_ulcer}                =&gt; {leprosy} 0.09756098 0.9230769  1.124143
 </pre></div>
 <p>with <em>lhs</em> for left-hand-side and <em>rhs</em> for right-hand-side. The occurence of the first implying the occurence of the latter.</p>
-<p>The confindence value of rule [1] and rule [2] being 1, this means that where there is onchocerciasis and Tb gambiense or onchocerciasis and Buruli ulcer, 100% of the times there is leprosy. The lift here indicates that they are independant, which means that these two left </p>
+<p>The confindence value of rule [1] and rule [2] being 1, this means that where there is onchocerciasis and Tb gambiense or onchocerciasis and Buruli ulcer, 100% of the times there is leprosy. The lift here indicates that they are independant, which means that these two left</p>
 <p>Therefore, in countries where there is Onchocerciasis and Tb gambiense, Onchocerciasis and Buruli ulcer, or Buruli ulcer, it is likely (confidence close to 1) that there is leprosy also. Since leprosy affects three times more countries than the other NTDs, it would be wise to remove it from further analysess.</p>
 <h3>Conclusion</h3>
 <p>The fact that leprosy is such a frequent disease compared to others skews the result, and makes it difficult to see real trend. Besides, many NTDs are missing from this analysis; those for which the data was not easily available. It would have been interesting to include Chagas and the dengue for instance, since they are also widespread.</p>
@@ -305,10 +305,10 @@ world_data<span class="o">@</span>data<span class="o">$</span>incidence <span cl
                                     <span class="m">100</span><span class="o">*</span>world_data<span class="o">@</span>data<span class="o">$</span>infected<span class="o">/</span>world_data<span class="o">@</span>data<span class="o">$</span>pop_est<span class="p">,</span><span class="kc">NA</span><span class="p">)</span>
 </pre></div>
 <p>Looking at the number of people infected per country, we can isolate 14 countries for which 10 to 50% of the population is affected by one NTD.</p>
-<div class="highlight"><pre><span></span>highincidence <span class="o">&lt;-</span> <span class="kp">subset</span><span class="p">(</span>world_data<span class="o">@</span>data<span class="p">,</span>incidence <span class="o">&gt;</span><span class="m">10</span> <span class="o">&amp;</span> <span class="o">!</span><span class="kp">is.na</span><span class="p">(</span>incidence<span class="p">),</span> 
+<div class="highlight"><pre><span></span>highincidence <span class="o">&lt;-</span> <span class="kp">subset</span><span class="p">(</span>world_data<span class="o">@</span>data<span class="p">,</span>incidence <span class="o">&gt;</span><span class="m">10</span> <span class="o">&amp;</span> <span class="o">!</span><span class="kp">is.na</span><span class="p">(</span>incidence<span class="p">),</span>
 select<span class="o">=</span><span class="kt">c</span><span class="p">(</span>Country<span class="p">,</span> pop_est<span class="p">,</span> incidence<span class="p">,</span>nb_diseases<span class="p">))</span>
 
-<span class="c1"># Top countries where 10 to 50% of the population is affected by </span>
+<span class="c1"># Top countries where 10 to 50% of the population is affected by</span>
 <span class="c1"># an NTD.</span>
 highincidence<span class="p">[</span><span class="kp">order</span><span class="p">(</span><span class="o">-</span>highincidence<span class="o">$</span>incidence<span class="p">),]</span>
 </pre></div>
@@ -316,7 +316,7 @@ highincidence<span class="p">[</span><span class="kp">order</span><span class="p
 <p>Every country in this top 14 is in Africa! Although Asia and South America are also struggling with NTDs, it seems that most people infected are in Africa.</p>
 <h2>Statistics for each disease</h2>
 <p>I ran some simple statistics to find the total number of people affected, the mean, and the standard deviation. For that, I used the <code>ddply</code> package in R.</p>
-<div class="highlight"><pre><span></span>ntd_stats_summ <span class="o">&lt;-</span> ddply<span class="p">(</span>melted<span class="p">,</span> <span class="kt">c</span><span class="p">(</span><span class="s">"variable"</span><span class="p">),</span> 
+<div class="highlight"><pre><span></span>ntd_stats_summ <span class="o">&lt;-</span> ddply<span class="p">(</span>melted<span class="p">,</span> <span class="kt">c</span><span class="p">(</span><span class="s">"variable"</span><span class="p">),</span>
       summarise<span class="p">,</span> total <span class="o">=</span> <span class="kp">sum</span><span class="p">(</span>value<span class="p">,</span>na.rm<span class="o">=</span><span class="bp">T</span><span class="p">),</span>
       mean <span class="o">=</span> <span class="kp">round</span><span class="p">(</span><span class="kp">mean</span><span class="p">(</span>value<span class="p">,</span>na.rm<span class="o">=</span><span class="bp">T</span><span class="p">),</span><span class="m">2</span><span class="p">),</span> sd <span class="o">=</span> <span class="kp">round</span><span class="p">(</span>sd<span class="p">(</span>value<span class="p">,</span>na.rm<span class="o">=</span><span class="bp">T</span><span class="p">),</span><span class="m">2</span><span class="p">),</span>
       sd_per <span class="o">=</span> <span class="kp">round</span><span class="p">(</span><span class="m">100</span><span class="o">*</span>sd<span class="p">(</span>value<span class="p">,</span>na.rm<span class="o">=</span><span class="bp">T</span><span class="p">)</span><span class="o">/</span><span class="kp">mean</span><span class="p">(</span>value<span class="p">,</span>na.rm<span class="o">=</span><span class="bp">T</span><span class="p">),</span><span class="m">2</span><span class="p">))</span>
@@ -325,7 +325,7 @@ ntd_stats_summ <span class="o">&lt;-</span> ntd_stats_summ<span class="p">[</spa
 <p>This resulted in the following table:</p>
 <p><img alt="simplestats alt &lt;&gt;" class="img-fluid" src="https://helenedraux.github.io/images/analysis_ntd/simplestats.png"/></p>
 <h2>Influence of some economic variables</h2>
-<p>I used a few economic variables to find if there was a relation between presence of NTDs and GDP, economy, and income grp. These were variables easy to find in the Natural Earth dataset. I used a <strong>linear model</strong> in a first instance, but there was no significant relationship between the total number of people affected by NTDs in these countries and their income. </p>
+<p>I used a few economic variables to find if there was a relation between presence of NTDs and GDP, economy, and income grp. These were variables easy to find in the Natural Earth dataset. I used a <strong>linear model</strong> in a first instance, but there was no significant relationship between the total number of people affected by NTDs in these countries and their income.</p>
 <h1>4. Spatial analysis</h1>
 <p>Spatial analysis would not be appropriate at the global scale in this case. For instance Cutaneous Leishmaniasis and Visceral Leishmaniasis both occur in Uganda, but in different regions. Trying to apply spatial statistics with global dataset would therefore not be very powerful and a regionalisation of the data is required.</p>
 <h2>Lymphatic Filariasis</h2>
@@ -333,7 +333,7 @@ ntd_stats_summ <span class="o">&lt;-</span> ntd_stats_summ<span class="p">[</spa
 <p>I used the point data LF Avg Prevalence (%), which consists of 7,000 points.</p>
 <h2>Density mapping</h2>
 <p>Mapping a density of points can help finding 'hotspots' where cases of Lymphatic Filariasis are frequent. The package <code>spatstat</code> provides with a simple <code>density</code> function.</p>
-<div class="highlight"><pre><span></span>spatialpoints <span class="o">&lt;-</span> as<span class="p">(</span>SpatialPoints<span class="p">(</span>LF_2016<span class="p">),</span> <span class="s">"ppp"</span><span class="p">)</span> 
+<div class="highlight"><pre><span></span>spatialpoints <span class="o">&lt;-</span> as<span class="p">(</span>SpatialPoints<span class="p">(</span>LF_2016<span class="p">),</span> <span class="s">"ppp"</span><span class="p">)</span>
 LF_density <span class="o">&lt;-</span> density<span class="p">(</span>spatialpoints<span class="p">,</span> adjust <span class="o">=</span> <span class="m">0.3</span><span class="p">)</span>
 </pre></div>
 <p>Then, by transforming the density into contour lines and keeping the most inner clustered points, we obtain the following map:</p>
@@ -344,7 +344,7 @@ LF_density <span class="o">&lt;-</span> density<span class="p">(</span>spatialpo
 <h2>Export to geographic data</h2>
 <h3>Select the data with spdplyr</h3>
 <div class="highlight"><pre><span></span><span class="c1"># Select only the Tropics</span>
-tropics <span class="o">&lt;-</span> geographicline <span class="o">%&gt;%</span> 
+tropics <span class="o">&lt;-</span> geographicline <span class="o">%&gt;%</span>
   filter<span class="p">(</span><span class="kp">grepl</span><span class="p">(</span><span class="s">'^Tropic'</span><span class="p">,</span> geographicline<span class="o">@</span>data<span class="o">$</span>name<span class="p">))</span>
 </pre></div>
 <h3>Convert to geojson with geojsonio</h3>
@@ -412,6 +412,43 @@ geojson_write<span class="p">(</span>tropics_json<span class="p">,</span> file <
 <noscript class="text-muted">
   Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
 </noscript>
+<!-- https://codepen.io/ncerminara/pen/gpVXxz -->
+      <div class="relatedposts">
+          <h1><small>Related posts</small></h1>
+          <div class="card-deck-wrapper">
+              <div class="row">
+                <ul class="post-list">
+                    <li>
+                      <div class="col-sm-4 card-wrapper">
+                          <div class="card related-art">
+                            <a href="https://helenedraux.github.io/posts/shinymapinterface.html">
+                            <div class="image relatedimage">
+                              <img class="card-img-top img-responsive img-feat-rel" src="/images/shinyapp.png">
+                            </div>
+                            </a>
+                            <div class="card-block">
+                                <h4 class="card-title"><a href="https://helenedraux.github.io/posts/shinymapinterface.html">Shiny map interface</a></h4>
+                                <p class="card-text">Shiny interface to explore places in Syria and upload excel file containing locations. Filters and time slider.</p>
+                            </div>
+                            <div class="footer-rel">
+                              <div class="footer-text">
+                                  <p class="card-text">
+                                      <small class="text-muted">
+                                          <a href="https://helenedraux.github.io/tag/r.html" class="taglink">#R</a>
+                                           <a href="https://helenedraux.github.io/tag/shiny.html" class="taglink">#Shiny</a>
+                                           <a href="https://helenedraux.github.io/tag/platform.html" class="taglink">#platform</a>
+                                           <a href="https://helenedraux.github.io/tag/visualisation.html" class="taglink">#Visualisation</a>
+                                  </small>
+                                  </p>
+                                </div>
+                              </div>
+                          </div>
+                      </div>
+                    </li>
+                </ul>
+              </div>
+          </div>
+      </div>
     </div>
   </div>
 

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Shiny map interface | Data science w/ a geo bias
+</title>
+  <link rel="canonical" href="https://helenedraux.github.io/posts/shinymapinterface.html">
+
+  <link rel="alternate" type="application/atom+xml" href="https://helenedraux.github.io/feeds/all.atom.xml" title="Full Atom Feed">
+  <link rel="alternate" type="application/atom+xml" href="https://helenedraux.github.io/feeds/visualisation.atom.xml" title="Categories Atom Feed">
+
+  <link rel="apple-touch-icon" href="https://helenedraux.github.io/apple-touch-icon.png" sizes="180x180">
+  <link rel="icon" type="image/png" href="https://helenedraux.github.io/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="https://helenedraux.github.io/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="https://helenedraux.github.io/manifest.json">
+  <meta name="theme-color" content="#333333">
+
+  <link rel="stylesheet" href="https://helenedraux.github.io/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://helenedraux.github.io/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://helenedraux.github.io/theme/css/pygments/lovelace.min.css">
+  <link rel="stylesheet" href="https://helenedraux.github.io/theme/css/style.css">
+
+  <link href="https://fonts.googleapis.com/css?family=Sansita+One" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+
+
+<meta name="description" content="">
+<script src="https://helenedraux.github.io/theme/js/jquery-1.12.4.min.js"></script>
+<script src="https://helenedraux.github.io/theme/js/bokeh-0.12.3.min.js"></script>
+<script src="https://helenedraux.github.io/theme/js/custom.js"></script>
+<script>
+  (function(i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function() {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o);
+    a.async = 1;
+    a.src = g;
+    m = s.getElementsByTagName(o)[0];
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-90338324-1', 'auto');
+  ga('send', 'pageview');
+</script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-2">
+          <a href="https://helenedraux.github.io">
+            <img class="img-fluid" src=https://helenedraux.github.io/images/compass2.png width=100 height=100 alt="Data science w/ a geo bias">
+          </a>
+        </div>
+        <div class="col-sm-10">
+          <h1 class="title"><a href="https://helenedraux.github.io">Data science w/ a geo bias</a></h1>
+          <div id="header_subtitle">
+            <h4 class="text-muted">Hélène Draux</h4>
+          </div>
+          <div id="header_links">
+            <ul class="list-inline">
+              <li class="list-inline-item"><a href="https://helenedraux.github.io">home</a> \ </li>
+              <li class="list-inline-item"><a href="https://helenedraux.github.io/pages/about.html">About</a> \ </li>
+              <li class="list-inline-item"><a href="https://helenedraux.github.io/pages/contact.html">Contact</a> \ </li>
+
+              <li class="list-inline-item"><a href="http://www.helenedraux.net/" target="_blank">www</a></li>
+
+              <li class=" list-inline-item text-muted"> | </li>
+              <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/helenedraux" target="_blank"></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+    <div class="article_title">
+      <h1>Shiny map interface
+</h1></div>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2017-02-13T15:23:00+02:00">
+        <i class="fa fa-clock-o"></i>
+        13 February 2017
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="https://helenedraux.github.io/category/visualisation.html">Visualisation</a>
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-files-o"></i>
+        <a href="https://helenedraux.github.io/tag/r.html">#R</a>,         <a href="https://helenedraux.github.io/tag/shiny.html">#Shiny</a>,         <a href="https://helenedraux.github.io/tag/platform.html">#platform</a>,         <a href="https://helenedraux.github.io/tag/visualisation.html">#Visualisation</a>      </li>
+    </ul>
+  </header>
+  <hr>
+  <div class="content">
+    <div class="row">
+      <!-- https://afeld.github.io/bootstrap-toc/:sidebar, which will move to the top on a small screen -->
+      <!--div class="col-sm-3">
+        <nav id="toc" data-spy="affix" data-toggle="toc"></nav>
+      </div>
+      <div class="col-sm-9"-->
+        <p>After discovering R last month, I had to try Shiny. Over the past years, I've done many user interfaces:</p>
+<ul>
+<li><a href="https://trap5.dk/kort/">Landscape Digital Atlas of Denmark</a>,</li>
+<li><a href="http://www.havfriluftsliv.dk/result/result-1year.html">1 year result of a mapping survey I had designed</a>,</li>
+<li><a href="http://www.helenedraux.net/portfolio/d3-gallery/">an advent calendar with a d3-graph a day</a>,</li>
+</ul>
+<p>so it was tempting to try Shiny. Interaction without JavaScript? I love JavaScript, but I want to see how that can work!</p>
+<p>Since I'm largely geo-biased, I was happy to make a map interface for the UN in order to map reports of what is happening in Syria. I used Leaflet for R, which I've used in the past as a JavaScript library, and created this very simple <a href="https://helenedraux.shinyapps.io/mapinterface/">Shiny app</a>.</p>
+<p><img alt="countries_percAffected alt &lt;&gt;" class="img-fluid" src="https://helenedraux.github.io/images/shinyapp.png"/></p>
+<p>In this blog post I present the app I've built, the data I used, and the interface. I then explain how I speed up the map, and then I conclude with my impressions of Shiny.</p>
+<h2>0. Overview</h2>
+<p>The app has two main objectives:</p>
+<ul>
+<li>Being an interface for the administrative borders of Syria for the team in charge of recording the reports</li>
+<li>Mapping the Excel reports to explore them using filters for date and some themes.</li>
+</ul>
+<p>I also tried to code the export in KML but unfortunately there seem to be a bug with the KML module of OGR package. I managed to export as a shapefile, or geojson, but these are not format that are easy to use without a proper GIS software (GoogleEarth may be borderline GIS software, it is only borderline in my opinion), so I moved into creating a better interface so the team would not need to use GoogleEarth.</p>
+<h2>1. The data</h2>
+<p>I used the data available at <a href="https://data.humdata.org/dataset/syrian-arab-republic-administrative-boundaries-populated-places">Humanitarian Data Exchange</a> to show the 3 levels of administrative borders (Governorate, District and Subdistrict), and the communities.</p>
+<h3>Administrative level</h3>
+<p>The data is relatively heavy, so I transformed it in <a href="https://github.com/topojson/topojson">topojson</a>, and combined the three layers into one. Topojson is such a life saver when making webmap with accurate data!</p>
+<p>I first renamed the fields from NAME_EN (they all had the same name) to the name of the layer (governorate, .. ), removed all the other fields, and then used the <a href="https://github.com/mbloch/mapshaper">mapshaper</a> tool, to combined them all together with the following command line:</p>
+<div class="highlight"><pre><span></span>mapshaper -i syria_adm1.shp syria_adm2.shp syria_adm3.shp combine-files -o syria.topojson
+</pre></div>
+<h3>Communities</h3>
+<p>The data provided by HDX contains the cities as polygons or points (the geographic center of the city). I thought of including the cities as polygons, but to make the application lighter, it is better to have them as points.</p>
+<h2>2. The interface</h2>
+<p>In making map dashboards, I always ensure that the users can find their way through the map. This means providing multiple basemaps and layers, data query tools, but also adding enough tools to navigate the map, for instance using a "Back Home" button. I also like making sure there are feedback with dynamic text or highlights, but it's a little bit more clunky in pure R.</p>
+<h3>Layers</h3>
+<ul>
+<li><strong>Basemaps</strong></li>
+</ul>
+<p>I selected two basemaps: the OSM (OpenStreetMap) and the HOT (Humanitarian OpenStreetMap Team): they don't have too much details, with faded colors, so it's possible to add more layers on them; and they have enough information to give a good context to the data.</p>
+<ul>
+<li><strong>Overlay maps</strong></li>
+</ul>
+<p>Overlay maps are the layers specific to Syria: two topojson files for administrative areas and a csv point file.</p>
+<h3>Mapping tools</h3>
+<p>The mapping tools include zooms "in" and "out". Leaflet for R doesn't yet provide out of the box option to move the zooms in either corner of the map, so I kept them in the top left corner. I added an actionButton:</p>
+<div class="highlight"><pre><span></span>actionButton<span class="p">(</span><span class="s">"gobackhome"</span><span class="p">,</span><span class="s">""</span><span class="p">,</span> icon <span class="o">=</span> icon<span class="p">(</span><span class="s">"globe"</span><span class="p">))</span>
+</pre></div>
+<p>with the CSS:</p>
+<div class="highlight"><pre><span></span><span class="nn">#gobackhome</span> <span class="p">{</span>
+  <span class="nb">position</span><span class="o">:</span> <span class="nb">absolute</span><span class="p">;</span>
+  <span class="nb">z-index</span><span class="o">:</span> <span class="m">10</span><span class="p">;</span>
+  <span class="nb">top</span><span class="o">:</span> <span class="m">70px</span><span class="p">;</span>
+  <span class="nb">left</span><span class="o">:</span> <span class="m">10px</span><span class="p">;</span>
+  <span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="n">rgba</span><span class="p">(</span><span class="m">0</span><span class="o">,</span> <span class="m">0</span><span class="o">,</span> <span class="m">0</span><span class="o">,</span> <span class="m">0</span><span class="o">.</span><span class="m">65098</span><span class="p">)</span> <span class="m">0px</span> <span class="m">1px</span> <span class="m">5px</span> <span class="m">0px</span><span class="p">;</span>
+  <span class="nb">padding</span><span class="o">:</span> <span class="m">4px</span> <span class="m">6px</span><span class="p">;</span>
+  <span class="p">}</span>
+</pre></div>
+<p>so it would be just under the zooms.</p>
+<h3>Interactivity</h3>
+<p>I added two ways to query the data:</p>
+<ul>
+<li>Click on the map to get the location</li>
+</ul>
+<p>I couldn't find any documentation on the event name for the map click on a topojson file (the click on marker or shapes are documented, but not for topojson). I tried my luck with <code>map_topojson_click</code> and was pleasantly surprised it worked! So I made an observeEvent:</p>
+<div class="highlight"><pre><span></span>observeEvent<span class="p">(</span>input<span class="o">$</span>map_topojson_click<span class="p">,{</span>
+    output<span class="o">$</span>location_topojson <span class="o">&lt;-</span> renderUI<span class="p">({</span>
+      gov <span class="o">&lt;-</span> <span class="kp">paste</span><span class="p">(</span><span class="s">"&lt;b&gt;Governate&lt;/b&gt;: "</span><span class="p">,</span> input<span class="o">$</span>map_topojson_click<span class="o">$</span>properties<span class="o">$</span>Governorat<span class="p">)</span>
+      district <span class="o">&lt;-</span> <span class="kp">paste</span><span class="p">(</span><span class="s">"&lt;b&gt;-&gt; District&lt;/b&gt;: "</span><span class="p">,</span>input<span class="o">$</span>map_topojson_click<span class="o">$</span>properties<span class="o">$</span>District<span class="p">)</span>
+      subdistrict <span class="o">&lt;-</span> <span class="kp">paste</span><span class="p">(</span><span class="s">"&lt;b&gt;--&gt; Sub district&lt;/b&gt;: "</span><span class="p">,</span>input<span class="o">$</span>map_topojson_click<span class="o">$</span>properties<span class="o">$</span>Subdistric<span class="p">)</span>
+      HTML<span class="p">(</span><span class="kp">paste</span><span class="p">(</span>gov<span class="p">,</span> district<span class="p">,</span> subdistrict<span class="p">,</span> sep <span class="o">=</span> <span class="s">'&lt;br/&gt;'</span><span class="p">))</span>
+
+    <span class="p">})</span>
+<span class="p">})</span>
+</pre></div>
+<p>For the city, the popup was very easily to encode with <code>popup=cities$Community</code> when creating them.</p>
+<ul>
+<li>Select the location</li>
+</ul>
+<p>Largely inspired by this <a href="https://blog.snap.uaf.edu/2016/03/16/r-shiny-leaflet-using-observers/">blog post</a>, I added some interactivity to the map with an observer to the map click. The principle is to create an empty layer of points (<code>pt_selected</code>) with a style that stands out (e.g. color and size), and to dynamically add and remove the point that should be highlighted or not.</p>
+<div class="highlight"><pre><span></span>pt_selected <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>map<span class="p">,</span> x<span class="p">,</span> y<span class="p">)</span> addCircleMarkers<span class="p">(</span>map<span class="p">,</span> x<span class="p">,</span> y<span class="p">,</span> radius<span class="o">=</span><span class="m">6</span><span class="p">,</span> color<span class="o">=</span><span class="s">"black"</span><span class="p">,</span> fillColor<span class="o">=</span><span class="s">"orange"</span><span class="p">,</span> fillOpacity<span class="o">=</span><span class="m">1</span><span class="p">,</span> opacity<span class="o">=</span><span class="m">1</span><span class="p">,</span>  weight<span class="o">=</span><span class="m">2</span><span class="p">,</span> stroke<span class="o">=</span><span class="kc">TRUE</span><span class="p">,</span> layerId<span class="o">=</span><span class="s">"Selected"</span><span class="p">)</span>
+
+observeEvent<span class="p">(</span>input<span class="o">$</span>Map_marker_click<span class="p">,</span> <span class="p">{</span>
+    p <span class="o">&lt;-</span> input<span class="o">$</span>Map_marker_click
+    proxy <span class="o">&lt;-</span> leafletProxy<span class="p">(</span><span class="s">"map"</span><span class="p">)</span>
+    <span class="kr">if</span><span class="p">(</span>p<span class="o">$</span>id<span class="o">==</span><span class="s">"Selected"</span><span class="p">){</span>
+      proxy <span class="o">%&gt;%</span> removeMarker<span class="p">(</span>layerId<span class="o">=</span><span class="s">"Selected"</span><span class="p">)</span>
+    <span class="p">}</span> <span class="kr">else</span> <span class="p">{</span>
+      proxy <span class="o">%&gt;%</span> setView<span class="p">(</span>lng<span class="o">=</span>p<span class="o">$</span>X<span class="p">,</span> lat<span class="o">=</span>p<span class="o">$</span>Y<span class="p">,</span> <span class="m">12</span><span class="p">)</span> <span class="o">%&gt;%</span> pt_selected<span class="p">(</span>p<span class="o">$</span>X<span class="p">,</span> p<span class="o">$</span>Y<span class="p">)</span> <span class="c1">#replaced input$Map_zoom by 3</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+</pre></div>
+<p>The points are highlighted by two successive drop-down boxes: the first one selects a governorate, and the second a city within that governorate. I also added a layer of points representing the center of the polygons, and zoom on these when the governorate is selected. I think it would be better to use the bounding box, but I just selected a zoom and the center instead.</p>
+<h3>Side panel</h3>
+<p>I made a side panel to display all the tools specific to the interface: exploring locations, uploading files, and exploring the file. Each tool is on a tab; Shiny makes the creation of such tabs very easy.</p>
+<ul>
+<li><strong>Exploring locations</strong></li>
+</ul>
+<p>The map can be explored in two ways:</p>
+<ul>
+<li>
+<p><strong>Click on the map</strong> gives a <strong>location</strong>: governorate, district and subdistrict. That's where using a topojson file with combined files comes in really handy: since it's the same object, we only need to query one layer for three different attributes.</p>
+</li>
+<li>
+<p><strong>Location</strong> selected in the successive dropdowns <strong>zooms to their location on the map</strong></p>
+</li>
+<li>
+<p><strong>Select a location</strong></p>
+</li>
+</ul>
+<p>On the 'Explore' tab of the panel, there are two drop downs: the first one for the governorates, and the second one for the cities. When a governorate is selected, the cities in the second drop down are the subset of cities in that governorate.</p>
+<h2>Speeding up the map</h2>
+<p>To make an interface that is well defined (good geographic data) but also easy to navigate, I used the following specifications:</p>
+<ul>
+<li>Use point data as often as possible (for small cities)</li>
+<li>Use topojson</li>
+<li>Simplify geographic data</li>
+<li>
+<p>load the data after the basemaps are loaded:</p>
+<p>:::R
+session$onFlushed(once=TRUE, function() {
+leafletProxy("map") %&gt;%
+  addTopoJSON(neighbourhoods, weight = 1, color = "red",fillOpacity = 0.2,group ="Neighbourhoods" ) %&gt;%
+  addTopoJSON(syria, weight = 1, dashArray="15, 10, 5", color = "#444444",fillOpacity = 0.01,group ="Admin. borders" ) %&gt;%
+  addCircleMarkers(cities$X,cities$Y,color="navy",popup =cities$Community,radius = 3,stroke = FALSE,fillOpacity = 0.5,group="Communities")
+})</p>
+</li>
+</ul>
+<h2>Using Shiny</h2>
+<h3>Shiny language</h3>
+<p>Shiny was developed to enable quick development of webpages without knowledge of HTML/CSS/JavaScript. This is true for very simple apps: it is pretty fast to create simple interactions between the data and the visualisation. However, beyond very simple interactions, either it becomes more complex and programmers need to understand basic concepts of interactive coding (some questions on stackoverflow are very very basic and show that many programmers jump into shiny without understanding simple concepts of interactions), or it simply requires to add some JavaScript. That defeats a little bit the point of coding a shiny app - why not writing in JavaScript from the start? ]Unless R code is intensively used, it might be better to learn to use JavaScript. Especially when you know JavaScript already, learning the observer/reaction events can feel a bit like a waste of time.
+Shiny is also evolving pretty quickly: for instance there used to be only an <code>observe</code> function, and so "observe" only one event, the code had to include <code>if (is.null(value)) return(NULL)</code>, but now Shiny includes <code>observeEvent</code> for specific events.</p>
+<p>From my experience in Copenhagen University, where the statistics department develops apps for non R users, and videos watched on Youtube, it sounds like a large part of developers are actually spending a lot of time on developing apps. So they are akin to professional coders.. why not learning JavaScript? That's not really a serious question, but I wonder if creating a meta-language was really necessary. I guess that's what most people do anyway! JavaScript on top of Shiny. It's not very performant, but for performance I don't know of anything that beats D3.</p>
+<h3>shinyapp.io</h3>
+<p>The webplatform <a href="shinyapp.io">shinyapp.io</a> is meant to easily publish shiny based apps online. The free version gives 5 apps available 25 hours per month. That's a good offer (since it's free!), although I find the time restriction very limiting for (semi)-professional apps. On the performance side, the applications are very very slow and I wonder if it wouldn't be easier to use a dedicated service for that, even paying.</p>
+<h2>Conclusion</h2>
+<p>Shiny is an easy-to-use language in order to quickly provide some interface for anyone to use R-based analysis. This means that non-R users can have access to interfaces without learning R, and makes it easier for R coders to discuss with non-technical people. Anything more complex requires some knowledge of JavaScript, but being able to use R functions on the fly in a browser is really interesting!</p>
+<p>Have a look at my app <a href="https://helenedraux.shinyapps.io/mapinterface/">here</a>, and tell me what you think!</p>
+      <!--/div-->    
+  </div>
+</article>
+<hr>
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() {
+    this.page.url = 'https://helenedraux.github.io/posts/shinymapinterface.html';
+    this.page.identifier = 'shinymapinterface';
+  };
+  (function() {
+    var d = document;
+    var s = d.createElement('script');
+    s.src = '//helenedraux-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript class="text-muted">
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+<!-- https://codepen.io/ncerminara/pen/gpVXxz -->
+      <div class="relatedposts">
+          <h1><small>Related posts</small></h1>
+          <div class="card-deck-wrapper">
+              <div class="row">
+                <ul class="post-list">
+                    <li>
+                      <div class="col-sm-4 card-wrapper">
+                          <div class="card related-art">
+                            <a href="https://helenedraux.github.io/posts/tropical-neglected-disease.html">
+                            <div class="image relatedimage">
+                              <img class="card-img-top img-responsive img-feat-rel" src="/images/analysis_ntd/carto.png">
+                            </div>
+                            </a>
+                            <div class="card-block">
+                                <h4 class="card-title"><a href="https://helenedraux.github.io/posts/tropical-neglected-disease.html">Tropical Neglected Disease</a></h4>
+                                <p class="card-text">Analysis of global trends in Tropical Neglected Diseases. Cluster and spatial analysis using R. Visualisation on Carto, R, and Tableau.</p>
+                            </div>
+                            <div class="footer-rel">
+                              <div class="footer-text">
+                                  <p class="card-text">
+                                      <small class="text-muted">
+                                          <a href="https://helenedraux.github.io/tag/r.html" class="taglink">#R</a>
+                                           <a href="https://helenedraux.github.io/tag/epidemiology.html" class="taglink">#epidemiology</a>
+                                           <a href="https://helenedraux.github.io/tag/carto.html" class="taglink">#carto</a>
+                                           <a href="https://helenedraux.github.io/tag/tableau.html" class="taglink">#Tableau</a>
+                                  </small>
+                                  </p>
+                                </div>
+                              </div>
+                          </div>
+                      </div>
+                    </li>
+                </ul>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <p class="col-sm-12 text-sm-right text-muted" id="themeauthor">
+          Built w/ <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / inspired by <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>
