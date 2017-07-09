@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>locationnewoffice | Data science w/ a geo bias
+</title>
+  <link rel="canonical" href="https://helenedraux.github.io/posts/locationnewoffice.html">
+
+  <link rel="alternate" type="application/atom+xml" href="https://helenedraux.github.io/feeds/all.atom.xml" title="Full Atom Feed">
+  <link rel="alternate" type="application/atom+xml" href="https://helenedraux.github.io/feeds/gis.atom.xml" title="Categories Atom Feed">
+
+  <link rel="apple-touch-icon" href="https://helenedraux.github.io/apple-touch-icon.png" sizes="180x180">
+  <link rel="icon" type="image/png" href="https://helenedraux.github.io/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="https://helenedraux.github.io/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="https://helenedraux.github.io/manifest.json">
+  <meta name="theme-color" content="#333333">
+
+  <link rel="stylesheet" href="https://helenedraux.github.io/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://helenedraux.github.io/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://helenedraux.github.io/theme/css/pygments/lovelace.min.css">
+  <link rel="stylesheet" href="https://helenedraux.github.io/theme/css/style.css">
+
+  <link href="https://fonts.googleapis.com/css?family=Sansita+One" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+
+
+<meta name="description" content="I was recently given the task of finding the best location for a company's office. The company, located in central London, had about 100 people and needed to move out of their current office.">
+<script src="https://helenedraux.github.io/theme/js/jquery-1.12.4.min.js"></script>
+<script src="https://helenedraux.github.io/theme/js/bokeh-0.12.3.min.js"></script>
+<script src="https://helenedraux.github.io/theme/js/custom.js"></script>
+<script>
+  (function(i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function() {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o);
+    a.async = 1;
+    a.src = g;
+    m = s.getElementsByTagName(o)[0];
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-90338324-1', 'auto');
+  ga('send', 'pageview');
+</script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-2">
+          <a href="https://helenedraux.github.io">
+            <img class="img-fluid" src=https://helenedraux.github.io/images/compass2.png width=100 height=100 alt="Data science w/ a geo bias">
+          </a>
+        </div>
+        <div class="col-sm-10">
+          <h1 class="title"><a href="https://helenedraux.github.io">Data science w/ a geo bias</a></h1>
+          <div id="header_subtitle">
+            <h4 class="text-muted">Hélène Draux</h4>
+          </div>
+          <div id="header_links">
+            <ul class="list-inline">
+              <li class="list-inline-item"><a href="https://helenedraux.github.io">home</a> \ </li>
+              <li class="list-inline-item"><a href="https://helenedraux.github.io/pages/about.html">About</a> \ </li>
+              <li class="list-inline-item"><a href="https://helenedraux.github.io/pages/contact.html">Contact</a> \ </li>
+
+              <li class="list-inline-item"><a href="http://www.helenedraux.net/" target="_blank">www</a></li>
+
+              <li class=" list-inline-item text-muted"> | </li>
+              <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/helenedraux" target="_blank"></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+    <div class="article_title">
+      <h1>locationnewoffice
+</h1></div>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2017-07-09T14:31:00+03:00">
+        <i class="fa fa-clock-o"></i>
+        09 July 2017
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="https://helenedraux.github.io/category/gis.html">GIS</a>
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-files-o"></i>
+        <a href="https://helenedraux.github.io/tag/gis.html">#GIS</a>,         <a href="https://helenedraux.github.io/tag/spatial-analysis.html">#spatial analysis</a>,         <a href="https://helenedraux.github.io/tag/python.html">#python</a>,         <a href="https://helenedraux.github.io/tag/google-maps-api.html">#Google Maps API</a>      </li>
+    </ul>
+  </header>
+  <hr>
+  <div class="content">
+    <div class="row">
+      <!-- https://afeld.github.io/bootstrap-toc/:sidebar, which will move to the top on a small screen -->
+      <!--div class="col-sm-3">
+        <nav id="toc" data-spy="affix" data-toggle="toc"></nav>
+      </div>
+      <div class="col-sm-9"-->
+        <p>I was recently given the task of finding the best location for a company's office. The company, located in central London, had about 100 people and needed to move out of their current office. Even before doing any spatial analysis, it seems intuitive to think that the current distribution of employees' residence was informed by the location of the office, and therefore the best office location would be central London. But how different would be the impact if the office was moved East London, or West London? Performing a spatial analysis to understand the impact of this change on people's transport journey is therefore primordial for any company that pretend to attract innovation and talent - these employees can, and will, change of company if their commute suddenly becomes to much of a pain.</p>
+<p>I conducted three analyses:</p>
+<ul>
+<li>Assessment of the current situation: how long does it take employee's to travel</li>
+<li>Finding the hot and cold spots of office locations (most people better off/worth off)</li>
+<li>Comparing potential office locations</li>
+</ul>
+<h1>Data</h1>
+<h2>Employee data</h2>
+<p>I was given the postcode of each employee (in the UK, a postcode is usually given to 10-20 addresses, so using the postcode is a good enough approximation to people's location). I first needed to locate them in terms of geographic coordinates. There are at least two free ways to do this: either you happen to already have the data with the geographic coordinates for each postcode (the data is currently sold I believe by the PostOffice, but there are outdated versions on the web), or you use a geolocating service (e.g. google maps API). If you have a small number of addresses and not much budget, the best is probably to use a free geolocation service such as the google maps API.</p>
+<p>I used google maps geolocating service: there are some QGIS plugins that use it, or a python google maps API wrapper library. I used QGIS, but if you wanted to use the python library, then you should register an API key (there is a key per service) and use the code below:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">google</span> <span class="nn">maps</span>
+<span class="n">gmaps</span> <span class="o">=</span> <span class="n">google</span> <span class="n">maps</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">'YOUR API KEY HERE'</span><span class="p">)</span>
+<span class="n">lpostcodes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'W1N 4AD'</span><span class="p">,</span> <span class="s1">'NB6 9UI'</span><span class="p">]</span>
+<span class="c1"># Geocoding an address</span>
+<span class="c1"># geocode_result = gmaps.geocode('1600 Amphitheatre Parkway, Mountain View, CA')</span>
+<span class="n">lcoords</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">pc</span> <span class="ow">in</span> <span class="n">lpostcodes</span><span class="p">:</span>
+    <span class="n">geocode_result</span> <span class="o">=</span> <span class="n">gmaps</span><span class="o">.</span><span class="n">geocode</span><span class="p">(</span><span class="n">pc</span><span class="p">)</span>
+    <span class="n">l</span><span class="o">.</span><span class="n">coords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">geocode_result</span><span class="p">)</span>
+</pre></div>
+<h2>Transit data</h2>
+<p>At first I downloaded the <a href="https://data.london.gov.uk/dataset/tfl-station-locations">TfL station data</a>, which contains all the TFL (tube and overground) stations and the lines that are deserved there. I used the QGIS analysis called <em>Distance matrix</em>, roughly following <a href="http://www.qgistutorials.com/en/docs/nearest_neighbor_analysis.html">these steps</a>. It gave me the three or more closest stations and I was also able to find the list of most accessible lines to all employees. Although this was interesting to find out, practically I wasn't much closer to finding a potential office location without including real transport data. Also, the TFL data excluded some train stations, which made the analysis obviously flawed.
+<a href="https://helenedraux.carto.com/builder/ed4f242c-9998-4a57-8fbb-71355735627b/embed?state=%7B%22map%22%3A%7B%22ne%22%3A%5B51.18967256411778%2C-1.0025024414062502%5D%2C%22sw%22%3A%5B51.85613885029435%2C0.35980224609375006%5D%2C%22center%22%3A%5B51.52430410472039%2C-0.32115328885443445%5D%2C%22zoom%22%3A10%7D%7D"></a></p>
+<p>I knew the best analysis would be a <a href="https://www.e-education.psu.edu/geog497c/node/647">network analysis</a>, which would include real public transport data, but this was meant to be low-key analysis, not full-on spatial analysis. Seriously, is there any company out there that would give the transport time for any journey and would include any means of transport? Well, obviously there is google maps! Google gives a restricted access for free to its <em>direction API</em>. The restrictions boil down to 2,500 API calls per day (and less than 100 per call). With about 100 employees, that's easily done!</p>
+<p>Another option would have been to use the <a href="https://tfl.gov.uk/info-for/open-data-users/unified-api?intcmp=29422">TfL API</a>, but I think it would include less options that google maps.</p>
+<p>I <a href="https://developers.google.com/maps/documentation/directions/get-api-key">registered a key</a> with the Google services for the direction API.</p>
+<h2>Making a grid</h2>
+<p>To find hot and cold spots of office location, I needed a grid of points equally spaced and for which I would calculate the travel time for each employee. I used python to create such a grid, using a <em>meshgrid</em> inside a rectangle for which I defined the min/max of X. I found this with google maps, to cover central London, and used a 0.01 deg step.</p>
+<div class="highlight"><pre><span></span><span class="c1">## Generate a grid with points around the current office</span>
+<span class="c1">## Based on https://stackoverflow.com/questions/35418012/how-to-create-matrix-of-points-by-x-y-coordinate-in-python</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+
+<span class="c1"># define the lower and upper limits for x and y</span>
+<span class="n">minX</span><span class="p">,</span> <span class="n">maxX</span><span class="p">,</span> <span class="n">minY</span><span class="p">,</span> <span class="n">maxY</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.224155</span><span class="p">,</span> <span class="mf">0.042997</span><span class="p">,</span> <span class="mf">51.464841</span><span class="p">,</span> <span class="mf">51.536015</span>
+<span class="c1"># create one-dimensional arrays for x and y</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">minX</span><span class="p">,</span> <span class="n">maxX</span><span class="p">,</span> <span class="p">(</span><span class="n">maxX</span><span class="o">-</span><span class="n">minX</span><span class="p">)</span><span class="o">/</span><span class="mf">0.01</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">minY</span><span class="p">,</span> <span class="n">maxY</span><span class="p">,</span> <span class="p">(</span><span class="n">maxY</span><span class="o">-</span><span class="n">minY</span><span class="p">)</span><span class="o">/</span><span class="mf">0.01</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># create the mesh based on these arrays</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="c1"># .. or as tuples</span>
+<span class="n">coords</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'meshgrid_officelocations.csv'</span><span class="p">,</span><span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s2">"placeid"</span><span class="p">,</span><span class="s2">"y"</span><span class="p">,</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)):</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">i</span><span class="p">,</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+</pre></div>
+<p><img alt="Grid_London_87points alt &lt;&gt;" class="img-fluid" src="{filename}/images/locationnewoffice/Grid_London_87points.png"/></p>
+<h2>Rent price data</h2>
+<p>I was curious to find the impact of the office rental price on employees transit duration. Would the rental price be higher or lower in each hot and cold spot? I used the <a href="https://www.thrillist.com/lifestyle/london/london-underground-rent-map">rental office price tube map</a> made by Thrisllist. There were 69 stations in Zone 1, with a monthly individual price from £450 in Lancaster Gate to £1,000 in Paddington, South Kensington, and St. James's Park.</p>
+<h1>Analysis</h1>
+<p>I present here three of the analyses I made for this question.</p>
+<h2>Question 1: Current situation</h2>
+<p>I used the Google Maps direction API to calculate the time for each employee to reach the office. Since officially work starts at 9.30am, I based my calculation for an arrival at 9.30am. The answer from the API is a nested json string containing all the information displayed on the Google Maps direction webpage: the time of departure and arrival, the duration, name of transport and company, changes, and every step of the journey. It also contains more than one option, the first being the fastest. Caveats are that it doesn't give the price, and in London that can be quite significant: buses are cheaper than the tube, which is cheaper than the DLSR. Not sure where the overground and the regional trains sit here.</p>
+<p>I first prepared the date dynamically (to be able to run any day without hardcoding it!).
+    :::python
+    from datetime import datetime, timedelta
+    now = datetime.now()
+    tomorrow_morning = None
+    if now.hour &lt; 6:
+        tomorrow_morning = datetime(now.year, now.month, now.day, 9, 30, 0, 0)
+    else:
+        tomorrow = datetime.today() + timedelta(days=1)
+        tomorrow_morning = datetime(tomorrow.year, tomorrow.month, tomorrow.day, 9, 30, 0, 0)
+    print(tomorrow_morning)</p>
+<p>The transit time from the google maps direction API is given in two formats: machine readable (in second), and human readable (a nice string <em>x hours y minutes</em>). You can access it as follow:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gmaps</span>
+<span class="n">dir_res</span> <span class="o">=</span> <span class="n">gmaps</span><span class="o">.</span><span class="n">directions</span><span class="p">(</span><span class="n">departure</span><span class="p">,</span><span class="n">destination</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s2">"transit"</span><span class="p">,</span><span class="n">arrival_time</span><span class="o">=</span><span class="n">tomorrow_morning</span><span class="p">)</span>
+<span class="n">time_text</span> <span class="o">=</span> <span class="n">dir_res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'legs'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'duration'</span><span class="p">][</span><span class="s1">'text'</span><span class="p">]</span>
+<span class="n">time_s</span> <span class="o">=</span> <span class="n">dir_res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'legs'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'duration'</span><span class="p">][</span><span class="s1">'value'</span><span class="p">]</span>
+</pre></div>
+<p>The Direction API sometimes fails, when it cannot find any transit option, so I added a check that there was an answer, and looped through the employees locations to find the time for every employee.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Employee location</span>
+<span class="n">employee_pc</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"employee_pc.csv"</span><span class="p">,</span><span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+        <span class="n">employee_pc</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+
+<span class="n">transit_time</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">destination</span> <span class="o">=</span> <span class="s1">'Address of the office'</span>
+<span class="k">for</span> <span class="n">pc</span> <span class="ow">in</span> <span class="n">employee_pc</span><span class="p">:</span>
+        <span class="n">dir_res</span> <span class="o">=</span> <span class="n">gmaps</span><span class="o">.</span><span class="n">directions</span><span class="p">(</span><span class="n">pc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">destination</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s2">"transit"</span><span class="p">,</span><span class="n">departure_time</span><span class="o">=</span><span class="n">tomorrow_morning</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dir_res</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">transit_time</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">pc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">dir_res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'legs'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'duration'</span><span class="p">][</span><span class="s1">'text'</span><span class="p">],</span><span class="n">dir_res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'legs'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'duration'</span><span class="p">][</span><span class="s1">'value'</span><span class="p">]])</span>
+        <span class="k">else</span><span class="p">:</span>
+                <span class="n">transit_time</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">pc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">])</span>
+</pre></div>
+<p><code>transit_time</code> is a list of list, which is easy to write into a pandas dataframe. I quickly realised that some people in this company were living far away and therefore unlikely to go to the office every day.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<span class="n">headings</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'employeeid'</span><span class="p">,</span><span class="s1">'postcode'</span><span class="p">,</span><span class="s1">'duration'</span><span class="p">,</span><span class="s1">'duration_s'</span><span class="p">]</span>
+<span class="c1"># Make a dataframe</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">transit_time</span><span class="p">,</span><span class="n">columns</span><span class="o">=</span><span class="n">headings</span><span class="p">)</span>
+
+<span class="c1"># Basic statistics</span>
+<span class="n">mean_dur</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'duration_s'</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">/</span><span class="mi">60</span>
+<span class="n">median_dur</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'duration_s'</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span><span class="o">/</span><span class="mi">60</span>
+
+<span class="c1"># This includes everyone, including those who don't go to the office every day.</span>
+<span class="c1"># We can restrict to those who travel less than 1h30</span>
+<span class="n">df_short</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df_short</span> <span class="o">=</span> <span class="n">df_short</span><span class="p">[</span><span class="n">df_short</span><span class="p">[</span><span class="s1">'duration_s'</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">5388</span><span class="p">]</span>
+
+<span class="n">mean_short_dur</span> <span class="o">=</span> <span class="n">df_short</span><span class="p">[</span><span class="s1">'duration_s'</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">/</span><span class="mi">60</span>
+<span class="n">median_short_dur</span> <span class="o">=</span> <span class="n">df_short</span><span class="p">[</span><span class="s1">'duration_s'</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span><span class="o">/</span><span class="mi">60</span>
+
+<span class="c1"># Categorise</span>
+<span class="n">df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'duration_s'</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">1800</span><span class="p">,</span><span class="s1">'cat'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Less than 0.5 hour'</span>
+<span class="n">df</span><span class="o">.</span><span class="n">ix</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">'duration_s'</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">1800</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'duration_s'</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">3600</span><span class="p">),</span><span class="s1">'cat'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Less than 1 hour'</span>
+<span class="n">df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'duration_s'</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">3600</span><span class="p">,</span><span class="s1">'cat'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'More than 1 hour'</span>
+
+<span class="n">nb_lessthan05h</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'cat'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'Less than 0.5 hour'</span><span class="p">])</span>
+<span class="n">nb_lessthan1h</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'cat'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'Less than 1 hour'</span><span class="p">])</span>
+<span class="n">nb_morethan1h</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'cat'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'More than 1 hour'</span><span class="p">])</span>
+</pre></div>
+<p><img alt="staffLoc_nobg alt &lt;&gt;" class="img-fluid" src="https://helenedraux.github.io/images/locationnewoffice/staffLoc_nobg.png"/></p>
+<h2>Question 2: Hot and Cold spot of office locations</h2>
+<p>In the second analysis I looked for hot and clod spots for office location. This is probably the most in-depth spatial analysis of this post. Instead of looking at current status or scenarios, it models London with an equidistant grid and systematically calculate the duration of each employee to each location.</p>
+<p>That's when I actually hit the restrictions of the API, since with about 100 employees, the restriction is reached with 25 locations; while London was modeled with 87 points. I selected zone 1, corresponding to 28 points, and ran the analysis on two separate days.</p>
+<h3>API calls to calculate transit time for each employee to the every point of the grid</h3>
+<div class="highlight"><pre><span></span><span class="c1"># List of destinations</span>
+<span class="n">XYnewoffices</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'offices.csv'</span><span class="p">,</span><span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="nb">next</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+                <span class="n">XYnewoffices</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span>
+<span class="c1"># list of staff locations</span>
+<span class="n">staffloc</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'staff.csv'</span><span class="p">,</span><span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="nb">next</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+                <span class="n">staffloc</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">row</span><span class="p">[</span><span class="mi">8</span><span class="p">]])</span>
+<span class="n">dur_arr</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">i</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">dur_arr</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s2">"placeid"</span><span class="p">,</span><span class="s2">"X"</span><span class="p">,</span><span class="s2">"Y"</span><span class="p">,</span><span class="s2">"employee_id"</span><span class="p">,</span><span class="s2">"staff_postcode"</span><span class="p">,</span><span class="s2">"duration"</span><span class="p">,</span><span class="s2">"duration_s"</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">xy</span> <span class="ow">in</span> <span class="n">XYnewoffices</span><span class="p">:</span>
+        <span class="n">dest_new</span> <span class="o">=</span> <span class="s2">","</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">xy</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="nb">str</span><span class="p">(</span><span class="n">xy</span><span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">staff</span> <span class="ow">in</span> <span class="n">staffloc</span><span class="p">:</span>
+                <span class="n">dir_res</span> <span class="o">=</span> <span class="n">gmaps</span><span class="o">.</span><span class="n">directions</span><span class="p">(</span><span class="n">staff</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">dest_new</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s2">"transit"</span><span class="p">,</span><span class="n">departure_time</span><span class="o">=</span><span class="n">tomorrow_morning</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dir_res</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">dur_arr</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span><span class="n">xy</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">xy</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">staff</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">staff</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">dir_res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'legs'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'duration'</span><span class="p">][</span><span class="s1">'text'</span><span class="p">],</span><span class="n">dir_res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'legs'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'duration'</span><span class="p">][</span><span class="s1">'value'</span><span class="p">]])</span>
+                <span class="k">else</span><span class="p">:</span>
+                        <span class="n">dur_arr</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span><span class="n">xy</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">xy</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">staff</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">staff</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">])</span>
+
+<span class="n">headers</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"placeid"</span><span class="p">,</span><span class="s2">"X"</span><span class="p">,</span><span class="s2">"Y"</span><span class="p">,</span><span class="s2">"employee_id"</span><span class="p">,</span><span class="s2">"staff_postcode"</span><span class="p">,</span><span class="s2">"duration"</span><span class="p">,</span><span class="s2">"duration_s"</span><span class="p">]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+</pre></div>
+<p>I exported this data to a CSV and imported it in QGIS. A simple chloropeth map highlights the places in London which are easier or more difficult to reach by the staff.</p>
+<p>On its own, it's an interesting result, because if you're interested in your staff's commuting time, this narrows down quickly which places can be investigated or which one should be avoided.</p>
+<h3>Adding rental price</h3>
+<p>I also wanted to find the rental price for each point on that grid. I calculated the <em>Voronoi polygons</em> around the 59 tube stations: the borders of these polygons are equidistant of the closest two points; and therefore any point in a polygon is closer to the centre of that polygon, and so is given the its characteristics. A spatial join between the Voronoi polygons and the grid links the rental of price of the closest tube station to the grid.</p>
+<p>I exported this data to csv again to import in python.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<span class="c1"># Find the average time spent in transit per location</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'av_dur'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">'placeid'</span><span class="p">])[</span><span class="s1">'duration_s'</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s1">'mean'</span><span class="p">)</span>
+
+<span class="c1"># Divide in three groups based on their transit time:</span>
+<span class="c1"># * Less than 30 minutes</span>
+<span class="c1"># * 30 min to 1 hour</span>
+<span class="c1"># * More than 1 hour</span>
+<span class="n">df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'duration_s'</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">1800</span><span class="p">,</span> <span class="s1">'duration_group'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'lessthan30min'</span>
+<span class="n">df</span><span class="o">.</span><span class="n">ix</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">'duration_s'</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">1800</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'duration_s'</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">3600</span><span class="p">),</span> <span class="s1">'duration_group'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'30minto1hour'</span>
+<span class="n">df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'duration_s'</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">3600</span><span class="p">,</span> <span class="s1">'duration_group'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'morethan1hour'</span>
+
+<span class="c1"># Create a pivot table to count the number of employees in each group for each location</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">values</span><span class="o">=</span><span class="s1">'employee_id'</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">'placeid'</span><span class="p">],</span><span class="n">columns</span> <span class="o">=</span> <span class="s1">'duration_group'</span><span class="p">,</span> <span class="n">aggfunc</span> <span class="o">=</span> <span class="s1">'count'</span><span class="p">)</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<span class="c1"># Merge the transit time for each location to the pivot table in order</span>
+<span class="c1"># This creates a summary for each location</span>
+<span class="n">df_summary</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">table</span><span class="p">,</span><span class="n">on</span><span class="o">=</span><span class="s1">'placeid'</span><span class="p">)</span>
+<span class="n">df_summary</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">'placeid'</span><span class="p">,</span><span class="s1">'lessthan30min'</span><span class="p">,</span><span class="s1">'30minto1hour'</span><span class="p">,</span><span class="s1">'morethan1hour'</span><span class="p">,</span><span class="s1">'RentalPrice'</span><span class="p">]]</span>
+<span class="n">df_summary</span> <span class="o">=</span> <span class="n">df_summary</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">([</span><span class="s1">'placeid'</span><span class="p">])</span>
+
+<span class="c1"># Calculate a few scores based on the number of people contained in each of the three transit time groups:</span>
+<span class="c1"># The higher the score, the better: people with a shorter commute weigh more than those with a longer commute</span>
+<span class="n">df_summary</span><span class="p">[</span><span class="s1">'score'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span><span class="o">*</span><span class="n">df</span><span class="p">[</span><span class="s1">'lessthan30min'</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">df</span><span class="p">[</span><span class="s1">'30minto1hour'</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="o">*</span><span class="n">df</span><span class="p">[</span><span class="s1">'morethan1hour'</span><span class="p">]</span>
+<span class="n">df_summary</span><span class="p">[</span><span class="s1">'score2'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">df</span><span class="p">[</span><span class="s1">'lessthan30min'</span><span class="p">]</span> <span class="o">+</span> <span class="mi">5</span><span class="o">*</span><span class="n">df</span><span class="p">[</span><span class="s1">'30minto1hour'</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="o">*</span><span class="n">df</span><span class="p">[</span><span class="s1">'morethan1hour'</span><span class="p">]</span>
+<span class="n">df_summary</span><span class="p">[</span><span class="s1">'score3'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span><span class="o">*</span><span class="n">df</span><span class="p">[</span><span class="s1">'lessthan30min'</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">df</span><span class="p">[</span><span class="s1">'30minto1hour'</span><span class="p">]</span>
+
+<span class="c1"># The score is divided by the rental price, so the higher the rental price, the smaller the index is.</span>
+<span class="n">df_summary</span><span class="p">[</span><span class="s1">'scorePrice'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_summary</span><span class="p">[</span><span class="s1">'score'</span><span class="p">]</span><span class="o">/</span><span class="n">df_summary</span><span class="p">[</span><span class="s1">'Price'</span><span class="p">]</span>
+</pre></div>
+<p>We obtain a map with a <em>scorePrice</em> index, which is higher when more employees travel less and the price is lower. We obtain the following map.</p>
+<p><img alt="OfficeLoc_price alt &lt;&gt;" class="img-fluid" src="{filename}/images/locationnewoffice/OfficeLoc_price.png"/></p>
+<h2>Comparison of potential office locations</h2>
+<p>Eventually, the company narrowed down to four choices for their new office locations. They wanted to understand the impact for all employees, as well as understanding who would be affected the most for each location (for employees not coming every day, then the impact would be lower overall).</p>
+<p>They gave me a list of four postcodes, which I processed with Google Maps Direction API.
+    :::python
+    import csv
+    import google maps
+    from datetime import datetime, timedelta
+    import pandas as pd, numpy as np</p>
+<div class="highlight"><pre><span></span>gmaps = google maps.Client(key='HERE YOUR API KEY')
+
+# Prepare date
+now = datetime.now()
+tomorrow_morning = None
+
+if now.hour &lt; 6:
+    tomorrow_morning = datetime(now.year, now.month, now.day, 9, 30, 0, 0)
+else:
+    tomorrow = datetime.today() + timedelta(days=1)
+    tomorrow_morning = datetime(tomorrow.year, tomorrow.month, tomorrow.day, 9, 30, 0, 0)
+
+
+# List of destinations: placeid, postcode
+XYnewoffices = []
+with open("4officelocations.csv",'r') as f:
+    reader = csv.reader(f)
+    next(reader, None)
+    for row in reader:
+        XYnewoffices.append([row[0],row[1]])
+
+
+# list of staff locations: employee_id, postcode
+staffloc = []
+with open("../staff_loconly.csv",'r') as f:
+    reader = csv.reader(f)
+    next(reader, None)
+    for row in reader:
+        staffloc.append([row[0],row[6]])
+
+# Loop through both lists and call API
+time_arr = []
+for staff in staffloc:
+    print 'staff', staff[0], staff[1]
+    stafftime = []
+    stafftime.extend([staff[0], staff[1]])
+    for i in range(len(XYnewoffices)):
+        dir_res = gmaps.directions(staff[1],XYnewoffices[i][1],mode="transit",departure_time=tomorrow_morning)
+        if len(dir_res) != 0:
+            stafftime.extend([dir_res[0]['legs'][0]['duration']['text'],dir_res[0]['legs'][0]['duration']['value']])
+        else:
+            stafftime.extend([np.nan,np.nan])
+    time_arr.append(stafftime)
+
+# Make a pandas dataframe
+headers = ["employee_id","employee_address",\
+                 "Current_time","Current_time_s",\
+                 "Option1_time","Option1_time_s",\
+                 "Option2_time","Option2_time_s",\
+                 "Option3_time","Option3_time_s",\
+                 "Option4_time","Option4_time_s"]
+df = pd.DataFrame(time_arr,columns=headers)
+
+# Calculate gain and loss for each location for each employee
+df['Option1_change'] = df['Option1_time_s'] - df['Current_time_s']
+df['Option2_change'] = df['Option2_time_s'] - df['Current_time_s']
+df['Option3_change'] = df['Option3_time_s'] - df['Current_time_s']
+df['Option4_change'] = df['Option4_time_s'] - df['Current_time_s']
+
+
+df_comp = df.copy()
+df_comp = df_comp[['employee_id','Option1_change','Option2_change','Option3_change','Option4_change']]
+
+
+# For each option, calculate:
+ # the number of people for whom it is worse,
+ # the average change for those negatively affected,
+ # median for those negatively affected
+
+# Melt the four option columns
+df_melt = pd.melt(df_comp,value_vars=['Option1_change','Option2_change','Option3_change','Option4_change'])#id_vars=,
+
+# Calcualte median: half employees are below this threshold, half are above.
+df_median = df_melt.copy()
+df_median = df_median.groupby(['variable']).agg({'value':np.median})
+df_median = df_median.reset_index()
+df_median = df_median.rename(columns={'variable':'option','value':'median'})
+df_mean = df_melt.copy()
+# Only calculate mean on the positive change values (for those that were affected negatively)
+df_mean = df_mean.groupby(['variable']).agg(lambda x:x[x&gt;0].mean())   
+df_mean = df_mean.reset_index()
+df_mean = df_mean.rename(columns={'variable':'option','value':'mean'})
+
+# Merge
+df_summary = df_median.merge(df_mean,on='option')
+</pre></div>
+<p>When trying to minimalise the impact of moving the office on employees' travelling time, we want to look at the difference of commuting time for each employee, rather than the new commuting time.</p>
+<p>I first compared the number of people negatively affected (increase of commuting time), the average, max and median change of time (in minutes) for each option.</p>
+<div class="highlight"><pre><span></span>Nb people &lt;0    Average (min.)  Max (min.)  Median (min.)
+</pre></div>
+<p>Option1 58  389.9482759 1101    205
+Option2 74  878.0945946 2025    880
+Option3 58  407.7413793 977 208
+Option4 60  320.4666667 980 157</p>
+<p>This clearly eliminate Option2: it's really the furthest away, and will increase commuting time for nearly all employees.</p>
+<p>I also quickly produced graphs with the amount of time increased of decreased from commuting time for each employee.</p>
+<p><img alt="4locations alt &lt;&gt;" class="img-fluid" src="https://helenedraux.github.io/images/locationnewoffice/4locations.png"/></p>
+<h1>Conclusion</h1>
+<p>This king of questions are really interesting, and I'm glad that companies care enough about their employees to seek information where it can help them making better decisions!</p>
+      <!--/div-->    
+  </div>
+</article>
+<hr>
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() {
+    this.page.url = 'https://helenedraux.github.io/posts/locationnewoffice.html';
+    this.page.identifier = 'locationnewoffice';
+  };
+  (function() {
+    var d = document;
+    var s = d.createElement('script');
+    s.src = '//helenedraux-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript class="text-muted">
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+<!-- https://codepen.io/ncerminara/pen/gpVXxz -->
+      <div class="relatedposts">
+          <h1><small>Related posts</small></h1>
+          <div class="card-deck-wrapper">
+              <div class="row">
+                <ul class="post-list">
+                    <li>
+                      <div class="col-sm-4 card-wrapper">
+                          <div class="card related-art">
+                            <a href="https://helenedraux.github.io/posts/NLP analysis.html">
+                            <div class="image relatedimage">
+                              <img class="card-img-top img-responsive img-feat-rel" src="/images/facebook.png">
+                            </div>
+                            </a>
+                            <div class="card-block">
+                                <h4 class="card-title"><a href="https://helenedraux.github.io/posts/NLP analysis.html">NLP of a Facebook Page</a></h4>
+                                <p class="card-text">Analysis of Parkinson's UK Facebook Page using pandas, NLTK, and Bokeh.</p>
+                            </div>
+                            <div class="footer-rel">
+                              <div class="footer-text">
+                                  <p class="card-text">
+                                      <small class="text-muted">
+                                          <a href="https://helenedraux.github.io/tag/python.html" class="taglink">#python</a>
+                                           <a href="https://helenedraux.github.io/tag/facebook.html" class="taglink">#facebook</a>
+                                           <a href="https://helenedraux.github.io/tag/analysis.html" class="taglink">#analysis</a>
+                                           <a href="https://helenedraux.github.io/tag/pandas.html" class="taglink">#pandas</a>
+                                           <a href="https://helenedraux.github.io/tag/nltk.html" class="taglink">#NLTK</a>
+                                           <a href="https://helenedraux.github.io/tag/bokeh.html" class="taglink">#Bokeh</a>
+                                  </small>
+                                  </p>
+                                </div>
+                              </div>
+                          </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="col-sm-4 card-wrapper">
+                          <div class="card related-art">
+                            <a href="https://helenedraux.github.io/posts/tips-using-jupyter-to-publish-on-a-blog.html">
+                            <div class="image relatedimage">
+                              <img class="card-img-top img-responsive img-feat-rel" src="/images/jupyter-main-logo.svg">
+                            </div>
+                            </a>
+                            <div class="card-block">
+                                <h4 class="card-title"><a href="https://helenedraux.github.io/posts/tips-using-jupyter-to-publish-on-a-blog.html">Tips using Jupyter to publish on a blog</a></h4>
+                                <p class="card-text"></p>
+                            </div>
+                            <div class="footer-rel">
+                              <div class="footer-text">
+                                  <p class="card-text">
+                                      <small class="text-muted">
+                                          <a href="https://helenedraux.github.io/tag/jupyter.html" class="taglink">#jupyter</a>
+                                           <a href="https://helenedraux.github.io/tag/notebook.html" class="taglink">#notebook</a>
+                                           <a href="https://helenedraux.github.io/tag/python.html" class="taglink">#python</a>
+                                           <a href="https://helenedraux.github.io/tag/css.html" class="taglink">#css</a>
+                                  </small>
+                                  </p>
+                                </div>
+                              </div>
+                          </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="col-sm-4 card-wrapper">
+                          <div class="card related-art">
+                            <a href="https://helenedraux.github.io/posts/import-from-the-__future__.html">
+                            <div class="image relatedimage">
+                              <img class="card-img-top img-responsive img-feat-rel" src="/images/fromfutureimportdivision.png">
+                            </div>
+                            </a>
+                            <div class="card-block">
+                                <h4 class="card-title"><a href="https://helenedraux.github.io/posts/import-from-the-__future__.html">import from the __future__</a></h4>
+                                <p class="card-text"></p>
+                            </div>
+                            <div class="footer-rel">
+                              <div class="footer-text">
+                                  <p class="card-text">
+                                      <small class="text-muted">
+                                          <a href="https://helenedraux.github.io/tag/python.html" class="taglink">#python</a>
+                                  </small>
+                                  </p>
+                                </div>
+                              </div>
+                          </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="col-sm-4 card-wrapper">
+                          <div class="card related-art">
+                            <a href="https://helenedraux.github.io/posts/tkinter-in-mac.html">
+                            <div class="image relatedimage">
+                              <img class="card-img-top img-responsive img-feat-rel" src="/images/TclError.png">
+                            </div>
+                            </a>
+                            <div class="card-block">
+                                <h4 class="card-title"><a href="https://helenedraux.github.io/posts/tkinter-in-mac.html">Tkinter in Mac</a></h4>
+                                <p class="card-text"></p>
+                            </div>
+                            <div class="footer-rel">
+                              <div class="footer-text">
+                                  <p class="card-text">
+                                      <small class="text-muted">
+                                          <a href="https://helenedraux.github.io/tag/python.html" class="taglink">#python</a>
+                                           <a href="https://helenedraux.github.io/tag/matplotlib.html" class="taglink">#matplotlib</a>
+                                           <a href="https://helenedraux.github.io/tag/udacity.html" class="taglink">#udacity</a>
+                                  </small>
+                                  </p>
+                                </div>
+                              </div>
+                          </div>
+                      </div>
+                    </li>
+                </ul>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <p class="col-sm-12 text-sm-right text-muted" id="themeauthor">
+          Built w/ <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / inspired by <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>
