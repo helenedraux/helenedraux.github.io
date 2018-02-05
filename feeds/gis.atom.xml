@@ -50,7 +50,7 @@
         &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)):&lt;/span&gt;
             &lt;span class="n"&gt;writer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;writerow&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]])&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img alt="Grid_London_87points alt &amp;lt;&amp;gt;" class="img-fluid" src="{filename}/images/locationnewoffice/Grid_London_87points.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Grid_London_87points alt &amp;lt;&amp;gt;" class="img-fluid" src="https://helenedraux.github.io/images/locationnewoffice/Grid_London_87points.png"/&gt;&lt;/p&gt;
 &lt;h2&gt;Rent price data&lt;/h2&gt;
 &lt;p&gt;I was curious to find the impact of the office rental price on employees transit duration. Would the rental price be higher or lower in each hot and cold spot? I used the &lt;a href="https://www.thrillist.com/lifestyle/london/london-underground-rent-map"&gt;rental office price tube map&lt;/a&gt; made by Thrisllist. There were 69 stations in Zone 1, with a monthly individual price from £450 in Lancaster Gate to £1,000 in Paddington, South Kensington, and St. James's Park.&lt;/p&gt;
 &lt;h1&gt;Analysis&lt;/h1&gt;
@@ -192,7 +192,7 @@
 &lt;span class="n"&gt;df_summary&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'scorePrice'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df_summary&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'score'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;df_summary&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'Price'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;We obtain a map with a &lt;em&gt;scorePrice&lt;/em&gt; index, which is higher when more employees travel less and the price is lower. We obtain the following map.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="OfficeLoc_price alt &amp;lt;&amp;gt;" class="img-fluid" src="{filename}/images/locationnewoffice/OfficeLoc_price.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="OfficeLoc_price alt &amp;lt;&amp;gt;" class="img-fluid" src="https://helenedraux.github.io/images/locationnewoffice/OfficeLoc_price.png"/&gt;&lt;/p&gt;
 &lt;h2&gt;Comparison of potential office locations&lt;/h2&gt;
 &lt;p&gt;Eventually, the company narrowed down to four choices for their new office locations. They wanted to understand the impact for all employees, as well as understanding who would be affected the most for each location (for employees not coming every day, then the impact would be lower overall).&lt;/p&gt;
 &lt;p&gt;They gave me a list of four postcodes, which I processed with Google Maps Direction API.

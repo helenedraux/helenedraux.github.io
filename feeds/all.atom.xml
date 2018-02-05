@@ -1683,7 +1683,7 @@ h6:hover .anchor-link {
         &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)):&lt;/span&gt;
             &lt;span class="n"&gt;writer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;writerow&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]])&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img alt="Grid_London_87points alt &amp;lt;&amp;gt;" class="img-fluid" src="{filename}/images/locationnewoffice/Grid_London_87points.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Grid_London_87points alt &amp;lt;&amp;gt;" class="img-fluid" src="https://helenedraux.github.io/images/locationnewoffice/Grid_London_87points.png"/&gt;&lt;/p&gt;
 &lt;h2&gt;Rent price data&lt;/h2&gt;
 &lt;p&gt;I was curious to find the impact of the office rental price on employees transit duration. Would the rental price be higher or lower in each hot and cold spot? I used the &lt;a href="https://www.thrillist.com/lifestyle/london/london-underground-rent-map"&gt;rental office price tube map&lt;/a&gt; made by Thrisllist. There were 69 stations in Zone 1, with a monthly individual price from £450 in Lancaster Gate to £1,000 in Paddington, South Kensington, and St. James's Park.&lt;/p&gt;
 &lt;h1&gt;Analysis&lt;/h1&gt;
@@ -1825,7 +1825,7 @@ h6:hover .anchor-link {
 &lt;span class="n"&gt;df_summary&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'scorePrice'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df_summary&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'score'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;df_summary&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'Price'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;We obtain a map with a &lt;em&gt;scorePrice&lt;/em&gt; index, which is higher when more employees travel less and the price is lower. We obtain the following map.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="OfficeLoc_price alt &amp;lt;&amp;gt;" class="img-fluid" src="{filename}/images/locationnewoffice/OfficeLoc_price.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="OfficeLoc_price alt &amp;lt;&amp;gt;" class="img-fluid" src="https://helenedraux.github.io/images/locationnewoffice/OfficeLoc_price.png"/&gt;&lt;/p&gt;
 &lt;h2&gt;Comparison of potential office locations&lt;/h2&gt;
 &lt;p&gt;Eventually, the company narrowed down to four choices for their new office locations. They wanted to understand the impact for all employees, as well as understanding who would be affected the most for each location (for employees not coming every day, then the impact would be lower overall).&lt;/p&gt;
 &lt;p&gt;They gave me a list of four postcodes, which I processed with Google Maps Direction API.
@@ -2069,7 +2069,7 @@ Shiny is also evolving pretty quickly: for instance there used to be only an &lt
 &lt;p&gt;The &lt;a href="http://apps.who.int/gho/data/node.main.A1629?lang=en"&gt;World Health Organisation&lt;/a&gt; lists 17 NTDs in 149 countries. However, not all diseases have global datasets. These datasets contain data of: new cases reported (&lt;em&gt;incidence&lt;/em&gt;), cases (&lt;em&gt;prevalence&lt;/em&gt;), individuals treated, and deaths in the case of rabies. Some of the NTDs data were more complicated to acquire, so they are not included in this analysis.&lt;/p&gt;
 &lt;h3&gt;Background on theses diseases&lt;/h3&gt;
 &lt;p&gt;Neglected Tropical Diseases (NTDs) are transmitted by flies, rabids, worms, or other people. In the buruli ulcer's case, the cause is even unknown. The consequences range from temporary disabilities (Dracunculiasis) to deaths (rabies). Most are easily cured (e.g. leprosy, rabies), but for some prevention is still difficult (Buruli ulcer).&lt;/p&gt;
-&lt;table class="table-hover table table-striped table-sm" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;"&gt;
+&lt;table class="table-hover table-sm table table-striped" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;"&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;&lt;/th&gt;&lt;th&gt;NTD&lt;/th&gt;&lt;th&gt;Disease&lt;/th&gt;&lt;td&gt;Vehicle&lt;/td&gt;&lt;td&gt;Consequence&lt;/td&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;1&lt;/th&gt;&lt;td&gt;Rabies&lt;/td&gt;&lt;td&gt;Viral&lt;/td&gt;&lt;td&gt;Rabids&lt;/td&gt;&lt;td&gt;Death&lt;/td&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;2&lt;/th&gt;&lt;td&gt;Human African Trypanosomiasis (Tb Rhodesiense)&lt;/td&gt;&lt;td&gt;Parasitic&lt;/td&gt;&lt;td&gt;Tsetse fly&lt;/td&gt;&lt;td&gt;Nervous system&lt;/td&gt;&lt;/tr&gt;
@@ -2084,7 +2084,7 @@ Shiny is also evolving pretty quickly: for instance there used to be only an &lt
 &lt;p&gt;Some countries have managed to eradicate some NTDs (e.g. Mexico eradicated onchocerciasis), but NTDs are still endemic in many countries. Cutaneous leishmaniasis, also called the Aleppo boil, seem to be coming back in 2016, principally in refugees fleeing Middle Eastern countries.&lt;/p&gt;
 &lt;h3&gt;Available data&lt;/h3&gt;
 &lt;p&gt;I downloaded data for 8 NTDs:
-&lt;table class="table-hover table table-striped table-sm" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;"&gt;
+&lt;table class="table-hover table-sm table table-striped" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;"&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;&lt;/th&gt;&lt;th&gt;NTD&lt;/th&gt;&lt;th&gt;Data&lt;/th&gt;&lt;td&gt;Measure&lt;/td&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;1&lt;/th&gt;&lt;td&gt;Rabies&lt;/td&gt;&lt;td&gt;Reported number of human rabies deaths&lt;/td&gt;&lt;td&gt;Mortality&lt;/td&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;2&lt;/th&gt;&lt;td&gt;Human African Trypanosomiasis (Tb Rhodesiense)&lt;/td&gt;&lt;td&gt;Number of &lt;strong&gt;new&lt;/strong&gt; reported cases&lt;/td&gt;&lt;td&gt;Incidence&lt;/td&gt;&lt;/tr&gt;
@@ -2109,7 +2109,7 @@ Shiny is also evolving pretty quickly: for instance there used to be only an &lt
 &lt;h1&gt;2. Data cleaning &amp;amp; preparation in R&lt;/h1&gt;
 &lt;h2&gt;Data cleaning&lt;/h2&gt;
 &lt;p&gt;The data I downloaded consisted of CSV files, one per disease. Each CSV file included only a selection of sovereign states with data for a selected few years (1990-2015). Missing data was inconsistent: some countries only had 'No data' while others had only '0'; however it was not clear if the "0" referred to missing data or to no data. For instance in Guinea-Bissau, cases of onchocerciasis (river blindness) were as following:&lt;/p&gt;
-&lt;table class="table-hover table table-striped table-sm" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;"&gt;
+&lt;table class="table-hover table-sm table table-striped" style="font-size: 12px;width: -webkit-fit-content;width: -moz-fit-content;width: fit-content;margin: 0 auto;"&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;Country&lt;/th&gt;&lt;th&gt;2015&lt;/th&gt;&lt;th&gt;2014&lt;/th&gt;&lt;th&gt;2013&lt;/th&gt;&lt;th&gt;2012&lt;/th&gt;&lt;th&gt;2011&lt;/th&gt;&lt;th&gt;2010&lt;/th&gt;&lt;th&gt;2009&lt;/th&gt;&lt;th&gt;2008&lt;/th&gt;&lt;th&gt;2007&lt;/th&gt;&lt;th&gt;2006&lt;/th&gt;&lt;th&gt;2005&lt;/th&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;th scope="row"&gt;Guinea-Bissau&lt;/th&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;124517&lt;/td&gt;&lt;td&gt;107278&lt;/td&gt;&lt;td&gt;107835&lt;/td&gt;&lt;td&gt;135014&lt;/td&gt;&lt;td&gt;NA&lt;/td&gt;&lt;td&gt;NA&lt;/td&gt;&lt;td&gt;70616&lt;/td&gt;&lt;td&gt;NA&lt;/td&gt;&lt;td&gt;NA&lt;/td&gt;&lt;td&gt;NA&lt;/td&gt;&lt;/tr&gt;
 &lt;/table&gt;
@@ -3382,10 +3382,10 @@ h6:hover .anchor-link {
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
-&lt;div id="8338ea1e-33ae-4940-90b1-768bebe1ce55"&gt;&lt;/div&gt;
+&lt;div id="df0e11b8-691c-48a9-85d4-2e39c98d21af"&gt;&lt;/div&gt;
 &lt;div class="output_subarea output_javascript "&gt;
 &lt;script type="text/javascript"&gt;
-var element = $('#8338ea1e-33ae-4940-90b1-768bebe1ce55');
+var element = $('#df0e11b8-691c-48a9-85d4-2e39c98d21af');
 
 (function(global) {
   function now() {

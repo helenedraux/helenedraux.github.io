@@ -162,7 +162,7 @@
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)):</span>
             <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">i</span><span class="p">,</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
 </pre></div>
-<p><img alt="Grid_London_87points alt &lt;&gt;" class="img-fluid" src="{filename}/images/locationnewoffice/Grid_London_87points.png"/></p>
+<p><img alt="Grid_London_87points alt &lt;&gt;" class="img-fluid" src="https://helenedraux.github.io/images/locationnewoffice/Grid_London_87points.png"/></p>
 <h2>Rent price data</h2>
 <p>I was curious to find the impact of the office rental price on employees transit duration. Would the rental price be higher or lower in each hot and cold spot? I used the <a href="https://www.thrillist.com/lifestyle/london/london-underground-rent-map">rental office price tube map</a> made by Thrisllist. There were 69 stations in Zone 1, with a monthly individual price from £450 in Lancaster Gate to £1,000 in Paddington, South Kensington, and St. James's Park.</p>
 <h1>Analysis</h1>
@@ -304,7 +304,7 @@
 <span class="n">df_summary</span><span class="p">[</span><span class="s1">'scorePrice'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_summary</span><span class="p">[</span><span class="s1">'score'</span><span class="p">]</span><span class="o">/</span><span class="n">df_summary</span><span class="p">[</span><span class="s1">'Price'</span><span class="p">]</span>
 </pre></div>
 <p>We obtain a map with a <em>scorePrice</em> index, which is higher when more employees travel less and the price is lower. We obtain the following map.</p>
-<p><img alt="OfficeLoc_price alt &lt;&gt;" class="img-fluid" src="{filename}/images/locationnewoffice/OfficeLoc_price.png"/></p>
+<p><img alt="OfficeLoc_price alt &lt;&gt;" class="img-fluid" src="https://helenedraux.github.io/images/locationnewoffice/OfficeLoc_price.png"/></p>
 <h2>Comparison of potential office locations</h2>
 <p>Eventually, the company narrowed down to four choices for their new office locations. They wanted to understand the impact for all employees, as well as understanding who would be affected the most for each location (for employees not coming every day, then the impact would be lower overall).</p>
 <p>They gave me a list of four postcodes, which I processed with Google Maps Direction API.
